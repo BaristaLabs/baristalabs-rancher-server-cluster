@@ -1,0 +1,26 @@
+# https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+
+deplyment:
+  # replicas: 3
+dashboard:
+  enabled: true
+
+service:
+  spec:
+    externalTrafficPolicy: Local
+
+# Schedule on the aks agentpool nodes
+nodeSelector:
+  kubernetes.io/os: linux
+  kubernetes.azure.com/mode: system
+
+# tolerations:
+# - key: "CriticalAddonsOnly"
+#   operator: "Equal"
+#   value: "true"
+#   effect: "NoSchedule"
+
+  # volumes:
+#   - name: ingress-certs
+#     mountPath: "/certs"
+#     type: configMap

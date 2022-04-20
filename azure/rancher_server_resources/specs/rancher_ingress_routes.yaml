@@ -1,0 +1,42 @@
+# Redirect to https
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: rancher-http-to-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-http-to-https-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`${rancher_hostname}`)
+      kind: Rule
+      middlewares:
+      - name: http-to-https
+      services:
+      - name: rancher
+        passHostHeader: true
+        port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-route
+spec:
+  entryPoints:
+    - websecure
+  tls: {}
+  routes:
+    - match: Host(`${rancher_hostname}`)
+      kind: Rule
+      services:
+      - name: rancher
+        passHostHeader: true
+        port: 80

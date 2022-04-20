@@ -1,0 +1,4 @@
+
+ingress:
+  tls:
+    source: secret
