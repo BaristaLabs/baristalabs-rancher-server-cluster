@@ -68,7 +68,7 @@ module "rancher_server_cluster" {
   rancher_server_cluster_sku_tier         = "Free"
 
   rancher_server_user_node_pools = {
-    rke = {
+    workerpool01 = {
       layer_name      = "ha"
       node_size       = "Standard_D2s_v4"
       node_count      = 1
