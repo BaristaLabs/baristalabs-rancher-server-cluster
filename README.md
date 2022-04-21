@@ -106,7 +106,38 @@ cd ./rancher_server_resources
 Visit whoami.<hostname> to verify the ingress is functioning.
 Now visit rancher.<hostname> to get the Rancher Server UI.
 
-All Done!
+6. Create any clusters you desire
+
+For on-prem clusters using Hyper-V, you will need to create one or more VMs running docker and associate them with the cluster
+
+Add a Linux Node with all roles
+1. Download the Ubuntu ISO image
+2. Create a new Hyper-V VM using the Ubuntu ISO image using a Gen 2 VM, disabling secure boot - configure the settings, install PowerShell and SSH Server.
+3. SSH to the VM and install docker using the following instructions:
+https://docs.docker.com/engine/install/ubuntu/
+https://docs.docker.com/engine/install/linux-postinstall/
+4. Create a new cluster in rancher server and run the registration script with all roles - the node will show up in the cluster
+
+Add a Windows node with the Worker role
+1. Download a Windows Server 2019 ISO
+2. Create a new Hyper-V VM using the Windows Server 2019 ISO - Suggest using the non-user experience but YMMV
+3. Activate windows using ```slmgr.vbs /ipk <kproduct key>```
+4. Rename the VM using ```Rename-Computer -NewName <hostname> -Restart```
+5. Install docker using the following:
+
+https://docs.microsoft.com/en-us/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server
+```
+Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
+Install-Package -Name docker -ProviderName DockerMsftProvider
+Restart-Computer -Force
+Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force
+Start-Service Docker
+```
+
+6. Shutdown the VM and enable secure boot
+7. Within the cluster management console in rancher, run the registration command - the ISO takes some time to download so be patient.
+
+At this point you'll have a Rancher Server cluster, a downstream cluster running a linux and a windows node.
 
 ## Removing a Rancher Server Cluster
 
