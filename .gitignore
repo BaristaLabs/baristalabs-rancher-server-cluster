@@ -54,3 +54,6 @@ terraform.lock.hcl
 
 ## Ignore dotenv files
 .env
+
+## Ignore packer log files
+**/packerlog.txt

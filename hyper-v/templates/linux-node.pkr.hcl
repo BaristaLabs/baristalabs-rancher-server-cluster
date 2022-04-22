@@ -67,13 +67,18 @@ source "hyperv-iso" "ubuntu" {
     "<wait><tab><tab><enter>", # SSH Setup
     "<wait><tab><enter>", # Featured Server Snaps
     "<wait3.5m><tab><tab><enter>", # Installing Updates
-    "<wait10s><enter>" # Done
+    "<wait10s><enter>", # Done
+    "<wait30s><enter>${var.ssh_username}<enter>", #login
+    "<wait>${var.ssh_password}<enter>",
+    "<wait>sudo apt-get update<enter><wait>${var.ssh_password}<wait><enter>",
+    "<wait30s>sudo apt-get install linux-image-virtual linux-tools-virtual linux-cloud-tools-virtual -y<enter>",
+    "<wait2.5m>sudo reboot now<enter>" # Done
   ]
 
   pause_before_connecting = "10s"
 
   communicator = "ssh"
-  ssh_timeout  = "5m"
+  ssh_timeout  = "15m"
 }
 
 
