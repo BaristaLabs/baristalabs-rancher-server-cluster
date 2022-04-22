@@ -71,7 +71,7 @@ module "rancher_server_cluster" {
     workerpool01 = {
       layer_name      = "ha"
       node_size       = "Standard_D2s_v4"
-      node_count      = 1
+      node_count      = 2
       os_type         = "Linux"
       os_disk_size_gb = 64
       node_taints     = []

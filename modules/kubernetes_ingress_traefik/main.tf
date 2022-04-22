@@ -8,6 +8,12 @@ resource "kubernetes_namespace" "traefik_ingress" {
 
     name = var.ingress_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+    ]
+  }
 }
 
 locals {

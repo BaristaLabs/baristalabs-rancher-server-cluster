@@ -8,6 +8,12 @@ resource "kubernetes_namespace" "whoami" {
 
     name = var.whoami_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+    ]
+  }
 }
 
 resource "kubectl_manifest" "whoami" {

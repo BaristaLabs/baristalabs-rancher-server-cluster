@@ -9,6 +9,13 @@ resource "kubernetes_namespace" "rancher" {
 
     name = local.rancher_server_namespaces.rancher_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+      metadata[0].labels,
+    ]
+  }
 }
 
 module "rancher_server" {
@@ -17,7 +24,7 @@ module "rancher_server" {
   rancher_namespace = kubernetes_namespace.rancher.metadata[0].name
 
   rancher_hostname = local.rancher_server_hostnames.rancher
-  rancher_replicas  = 1
+  rancher_replicas  = 2
 
   naked_domain_cert    = data.azurerm_key_vault_certificate_data.naked_domain_cert
 }

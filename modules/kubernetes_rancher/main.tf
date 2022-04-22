@@ -11,6 +11,12 @@ resource "kubernetes_secret" "naked_domain_cert" {
   }
 
   type = "kubernetes.io/tls"
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+    ]
+  }
 }
 
 resource "helm_release" "rancher" {
