@@ -7,12 +7,34 @@ packer {
   }
 }
 
-source "hyperv-iso" "ubuntu" {
-  iso_url       = "https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso",
-  iso_checksum  =  "sha256:84aeaf7823c8c61baa0ae862d0a06b03409394800000b3235854a6b38eb4856f",
+variable "ssh_username" {
+  type    = string
+}
 
-  disk_size        = 256000
-  shutdown_command = "echo 'packer' | sudo -S shutdown -P now"
+variable "ssh_password" {
+  type    = string
+}
+
+source "hyperv-iso" "ubuntu" {
+  iso_urls        = [
+    "c:/isos/ubuntu-20.04.4-live-server-amd64.iso",
+    "https://releases.ubuntu.com/20.04.4/ubuntu-20.04.4-live-server-amd64.iso", 
+  ],
+  iso_checksum    = "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad",
+  iso_target_path = "c:/isos/", 
+
+  memory             = 8192,
+  cpus               = 2,
+  disk_size          = 256000,
+  generation         = 2,
+  enable_secure_boot = false,
+
+  shutdown_command   = "echo '${var.ssh_password}' | sudo -S shutdown -P now"
+
+  ssh_username       = var.ssh_username
+  ssh_password       = var.ssh_password
+
+  boot_command = 
 }
 
 
