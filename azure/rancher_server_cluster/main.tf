@@ -64,7 +64,6 @@ module "rancher_server_cluster" {
 
   rancher_server_cluster_agent_node_size  = "Standard_D2s_v4"
   rancher_server_cluster_agent_node_count = 1
-  rancher_server_cluster_azs              = null
   rancher_server_cluster_sku_tier         = "Free"
 
   rancher_server_user_node_pools = {

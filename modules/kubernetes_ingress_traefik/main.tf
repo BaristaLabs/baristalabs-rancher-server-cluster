@@ -111,4 +111,8 @@ resource "kubectl_manifest" "traefik_config" {
   yaml_body = each.value
 
   override_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
+
+  depends_on = [
+    helm_release.traefik_ingress
+  ]
 }
