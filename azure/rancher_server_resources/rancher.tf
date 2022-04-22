@@ -24,7 +24,7 @@ module "rancher_server" {
   rancher_namespace = kubernetes_namespace.rancher.metadata[0].name
 
   rancher_hostname = local.rancher_server_hostnames.rancher
-  rancher_replicas  = 2
+  rancher_replicas = 3
 
   naked_domain_cert    = data.azurerm_key_vault_certificate_data.naked_domain_cert
 }
