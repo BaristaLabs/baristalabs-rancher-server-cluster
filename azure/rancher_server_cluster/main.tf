@@ -63,19 +63,8 @@ module "rancher_server_cluster" {
   rancher_server_log_analytics_workspace = module.rancher_server.rancher_server_log_analytics_workspace
 
   rancher_server_cluster_agent_node_size  = "Standard_D2s_v4"
-  rancher_server_cluster_agent_node_count = 1
+  rancher_server_cluster_agent_node_count = 3
   rancher_server_cluster_sku_tier         = "Free"
-
-  rancher_server_user_node_pools = {
-    workerpool01 = {
-      layer_name      = "ha"
-      node_size       = "Standard_D2s_v4"
-      node_count      = 2
-      os_type         = "Linux"
-      os_disk_size_gb = 64
-      node_taints     = []
-    }
-  }
 
   tags = local.tags
 }
