@@ -15,6 +15,10 @@ output "rancher_server_cluster_name" {
   value = module.rancher_server_cluster.rancher_server_cluster.name
 }
 
+output "rancher_server_cluster_ip_id" {
+  value = module.rancher_server_cluster.rancher_server_cluster_outbound_ip.id
+}
+
 output "rancher_server_cluster_ip" {
   value = module.rancher_server_cluster.rancher_server_cluster_outbound_ip.ip_address
 }

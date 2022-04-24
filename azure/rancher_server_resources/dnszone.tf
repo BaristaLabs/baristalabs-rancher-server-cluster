@@ -10,7 +10,7 @@ resource "azurerm_dns_a_record" "rancher_server_hostname" {
   zone_name           = azurerm_dns_zone.rancher_server.name
   resource_group_name = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_resource_group_name
   ttl                 = 300
-  records             = [data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip]
+  target_resource_id  = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip_id
 }
 
 resource "azurerm_dns_a_record" "rancher_server_hostname_wildcard" {
@@ -18,5 +18,5 @@ resource "azurerm_dns_a_record" "rancher_server_hostname_wildcard" {
   zone_name           = azurerm_dns_zone.rancher_server.name
   resource_group_name = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_resource_group_name
   ttl                 = 300
-  records             = [data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip]
+  target_resource_id  = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip_id
 }
