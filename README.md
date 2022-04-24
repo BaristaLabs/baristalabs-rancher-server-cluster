@@ -22,6 +22,7 @@ Azure CLI
 https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 
 
+If you're planning on exposing your Rancher Server to the public, you'll also need a domain name to point to your Rancher Server.
 ### Windows
 To install with [chocolatey](https://chocolatey.org/):
 ``` PS
@@ -53,7 +54,6 @@ The structure folder is currently the following:
 ├── modules - Contains supporting terraform modules
 └── scripts - Contains PowerShell scripts in support of Rancher Server DevOps
 ``` 
-```
 
 ## Getting Started (Azure)
 This series of steps will initialize Rancher Server in an Azure environment.
@@ -92,9 +92,7 @@ The deployment script will associated contexts to the local environment - for in
 
 5. Provision the Rancher Server itself.
 
-First, based on the output of step 4, associate DNS entries rancher.
-Next, create SSL certificates for the Rancher Server by executing ```./Create-RancherServerCertificates.ps1```
-Add the certificates to the DevOps Azure Key Vault with the keys ```rancher-server-naked-domain-cert``` and ```rancher-server-wildcard-domain-cert```
+Modify any settings within ./rancher_server_resources/main.tf to suit your environment.
 
 Now, deploy the rancher server resources
 
@@ -102,6 +100,8 @@ Now, deploy the rancher server resources
 cd ./rancher_server_resources
 ./Deploy-RancherServer.ps1
 ```
+
+This process creates a DNS zone. Within your domain registrar you'll need to add a NS record for your hostname that indicates the nameservers in the DNS zone.
 
 Visit whoami.<hostname> to verify the ingress is functioning.
 Now visit rancher.<hostname> to get the Rancher Server UI.
