@@ -1,4 +1,3 @@
-
 ingress:
-  tls:
-    source: secret
+  enabled: false # We're using Traefik
+  

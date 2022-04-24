@@ -20,18 +20,6 @@ variable "rancher_server_cluster_name" {
   default     = "aks-rancher-server-01"
 }
 
-variable "naked_domain_cert_akv_name" {
-  type        = string
-  description = "The name of the AKV secret containing the naked domain certificate"
-  default     = "rancher-server-naked-domain-cert"
-}
-
-variable "wildcard_domain_cert_akv_name" {
-  type        = string
-  description = "The name of the AKV secret containing the wildcard domain certificate"
-  default     = "rancher-server-wildcard-domain-cert"
-}
-
 variable "tags" {
   type        = map(string)
   description = "The tags to apply to all resources that are created"

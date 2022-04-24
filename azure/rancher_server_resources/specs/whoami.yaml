@@ -1,12 +1,14 @@
-# Redirect to https
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
+apiVersion: cert-manager.io/v1
+kind: Certificate
 metadata:
-  name: http-to-https
+  name: ${whoami_hostname}
 spec:
-  redirectScheme:
-    scheme: https
-    permanent: true
+  dnsNames:
+    - ${whoami_hostname}
+  secretName: tls-whoami
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -47,28 +49,12 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: whoami-http-to-https-redirect
-spec:
-  entryPoints:
-    - web
-  routes:
-    - match: Host(`${whoami_hostname}`)
-      kind: Rule
-      middlewares:
-      - name: http-to-https
-      services:
-      - name: whoami-service
-        passHostHeader: true
-        port: 80
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
   name: whoami-route
 spec:
   entryPoints:
     - websecure
-  tls: {}
+  tls:
+    secretName: tls-whoami
   routes:
     - match: Host(`${whoami_hostname}`)
       kind: Rule

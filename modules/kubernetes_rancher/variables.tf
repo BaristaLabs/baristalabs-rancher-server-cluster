@@ -12,12 +12,3 @@ variable "rancher_replicas" {
   type        = number
   description = "indicates the number of replicas to use"
 }
-
-variable "naked_domain_cert" {
-  type = object({
-    name = string
-    pem = string
-    key = string
-  })
-  description = "a naked domain certificate to store as a secret associated with the ingress"
-}

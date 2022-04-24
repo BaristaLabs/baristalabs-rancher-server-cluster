@@ -20,25 +20,15 @@ data "terraform_remote_state" "rancher_server_cluster" {
   }
 }
 
-# Retrieve naked and root certificates from AKV
-data "azurerm_key_vault_certificate_data" "naked_domain_cert" {
-  name         = var.naked_domain_cert_akv_name
-  key_vault_id = data.terraform_remote_state.rancher_server_devops.outputs.rancher_server_devops_key_vault.id
-}
-
-data "azurerm_key_vault_certificate_data" "wildcard_domain_cert" {
-  name         = var.wildcard_domain_cert_akv_name
-  key_vault_id = data.terraform_remote_state.rancher_server_devops.outputs.rancher_server_devops_key_vault.id
-}
-
 # Set up the locals to use for the Rancher Server environment
 locals {
   hostname = "baristalabs.io"
 
   # Namespaces
   rancher_server_namespaces = {
+    "cert_manager_namespace" = "cert-manager"
     "rancher_namespace" = "cattle-system"
-    "ingress_namespace" = "traefik-ingress"
+    "traefik_namespace" = "traefik-system"
     "whoami_namespace"  = "whoami"
   }
 
@@ -47,6 +37,9 @@ locals {
     "rancher" = "rancher.${local.hostname}"
     "whoami"  = "whoami.rancher.${local.hostname}"
   }
+
+  cert_admin_email       = "sean@baristalabs.io"
+  cert_ca_use_production = false
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher_server_01" })
 }

@@ -3,7 +3,7 @@ resource "kubernetes_namespace" "rancher" {
   metadata {
 
     labels = {
-      creator = "baristalabs_rancher_server",
+      creator = "rancher_server_terraform",
       kind    = "rancher"
     }
 
@@ -26,7 +26,9 @@ module "rancher_server" {
   rancher_hostname = local.rancher_server_hostnames.rancher
   rancher_replicas = 3
 
-  naked_domain_cert    = data.azurerm_key_vault_certificate_data.naked_domain_cert
+  depends_on = [
+    module.cert_manager
+  ]
 }
 
 

@@ -1,4 +1,22 @@
 ### Provision a whoami service
+resource "kubernetes_namespace" "whoami" {
+  metadata {
+
+    labels = {
+      creator = "rancher_server_terraform"
+      kind    = "whoami"
+    }
+
+    name = local.rancher_server_namespaces.whoami_namespace
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+    ]
+  }
+}
+
 
 data "kubectl_path_documents" "whoami" {
   pattern = "${path.module}/specs/whoami.yaml"
@@ -8,13 +26,9 @@ data "kubectl_path_documents" "whoami" {
   }
 }
 
-module "whoami_service" {
-  source = "../../modules/kubernetes_whoami_service"
+resource "kubectl_manifest" "whoami" {
+  for_each  = toset(data.kubectl_path_documents.whoami.documents)
+  yaml_body = each.value
 
-  whoami_namespace = local.rancher_server_namespaces.whoami_namespace
-  whoami_documents = data.kubectl_path_documents.whoami.documents
-
-  depends_on = [
-    module.rancher_server_ingress
-  ]
+  override_namespace = kubernetes_namespace.whoami.metadata[0].name
 }
