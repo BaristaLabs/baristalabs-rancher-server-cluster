@@ -24,7 +24,7 @@ module "rancher_server_ingress" {
   ingress_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
   kubernetes_ingress_public_ip = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip
-  kubernetes_ingress_replicas  = 1
+  kubernetes_ingress_replicas  = 3
 
   depends_on = [
     module.cert_manager
