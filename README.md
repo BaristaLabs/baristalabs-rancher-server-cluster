@@ -1,4 +1,4 @@
-# BaristaLabs - Terraform Configuration for a Rancher Server Cluster on AKS
+# Terraform Configuration for automated deployments of Rancher Server
 
 Terraform based setup for a HA Rancher Server Cluster on Azure Kubernetes Service (AKS)
 
@@ -18,6 +18,9 @@ https://terragrunt.gruntwork.io/docs/getting-started/install/
 Helm
 https://helm.sh/
 
+Packer
+https://www.packer.io/
+
 Azure CLI
 https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 
@@ -26,13 +29,13 @@ If you're planning on exposing your Rancher Server to the public, you'll also ne
 ### Windows
 To install with [chocolatey](https://chocolatey.org/):
 ``` PS
-choco install pwsh terraform terragrunt helm azure-cli
+choco install pwsh terraform terragrunt helm packer azure-cli
 ```
 
 ### macOS
 To install with [Homebrew](https://brew.sh/):
 ``` PS
-brew install terraform terragrunt helm azure-cli
+brew install terraform terragrunt helm packer azure-cli
 brew install --cask powershell
 ```
 
@@ -108,9 +111,19 @@ Now visit rancher.<hostname> to get the Rancher Server UI.
 
 6. Create any clusters you desire
 
+## Adding Nodes (Hyper-V)
+
 For on-prem clusters using Hyper-V, you will need to create one or more VMs running docker and associate them with the cluster
 
-Add a Linux Node with all roles
+Windows and Linux based nodes can be created using the following commands via packer:
+
+```
+./hyper-v/Build-LinuxNode.ps1
+```
+
+Or manually:
+### Add a Linux Node with all roles
+
 1. Download the Ubuntu ISO image
 2. Create a new Hyper-V VM using the Ubuntu ISO image using a Gen 2 VM, disabling secure boot - configure the settings, install PowerShell and SSH Server.
 3. SSH to the VM and install docker using the following instructions:
@@ -118,7 +131,7 @@ https://docs.docker.com/engine/install/ubuntu/
 https://docs.docker.com/engine/install/linux-postinstall/
 4. Create a new cluster in rancher server and run the registration script with all roles - the node will show up in the cluster
 
-Add a Windows node with the Worker role
+### Add a Windows node with the Worker role
 1. Download a Windows Server 2019 ISO
 2. Create a new Hyper-V VM using the Windows Server 2019 ISO - Suggest using the non-user experience but YMMV
 3. Activate windows using ```slmgr.vbs /ipk <kproduct key>```
@@ -158,7 +171,7 @@ is run. This script normally supports development of this repo or when wanting t
 
 Please become familar with terraform state management as this will greatly assist with any questions. Often times a manual removal of a resource coupled with a refresh of the state fixes a lot of ailments.
 
-Q: I recieve ```Error: rpc error: code = Unavailable desc = transport is closing``` or ```Error: rpc error: code = Canceled desc = context canceled``` when running terraform operations
+Q: I receive ```Error: rpc error: code = Unavailable desc = transport is closing``` or ```Error: rpc error: code = Canceled desc = context canceled``` when running terraform operations
 
 A: You're likely running into Azure API throttling, decrease the level of parallelism using ```terraform apply --parallelism=5```. The default is 10.
 
