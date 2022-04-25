@@ -8,20 +8,30 @@ packer {
 }
 
 variable "vm_name" {
-  type    = string
+  type = string
 }
 
 variable "linux_username" {
-  type    = string
+  type = string
 }
 
 variable "linux_password" {
-  type    = string
+  type = string
 }
 
 variable "virtual_switch_name" {
   type    = string
-  default   = "External"
+  default = "External"
+}
+
+variable "memory" {
+  type    = number
+  default = 8192
+}
+
+variable "cpus" {
+  type    = number
+  default = 2
 }
 
 variable "disk_size" {
@@ -59,55 +69,61 @@ variable "rancher_node_docker_args" {
   default = "--worker"
 }
 
+variable "vmcx_path" {
+  type    = string
+  default = null
+}
+
 source "hyperv-iso" "ubuntu_2004_server" {
-  iso_urls        = [
+  iso_urls = [
     "c:/isos/ubuntu-20.04.4-live-server-amd64.iso",
-    "https://releases.ubuntu.com/20.04.4/ubuntu-20.04.4-live-server-amd64.iso", 
+    "https://releases.ubuntu.com/20.04.4/ubuntu-20.04.4-live-server-amd64.iso",
   ]
   iso_checksum    = "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad"
   iso_target_path = "c:/isos/"
 
-  memory             = 8192
-  cpus               = 2
-  disk_size          = var.disk_size
-  generation         = 2
+  memory          = var.memory
+  cpus            = var.cpus
+  disk_size       = var.disk_size
+  disk_block_size = 1 # Recommended disk block size for Linux hyper-v guests is 1 MiB
+  generation      = 2
 
   enable_secure_boot    = false
   enable_dynamic_memory = true
   vm_name               = var.vm_name
   switch_name           = var.virtual_switch_name
 
-  shutdown_command   = "echo \"${var.linux_password}\" | sudo -S -k shutdown -P now"
-  shutdown_timeout   = "30s"
+  shutdown_command = "echo \"${var.linux_password}\" | sudo -S -k shutdown -P now"
+  shutdown_timeout = "30s"
 
-  output_directory   = "C:/vhds/${var.vm_name}"
+  output_directory = "C:/vhds/${var.vm_name}"
 
-  ssh_username       = var.linux_username
-  ssh_password       = var.linux_password
+  ssh_username = var.linux_username
+  ssh_password = var.linux_password
 
   boot_wait = "2s"
   boot_command = [
     "<enter>",
-    "<wait30s><enter>", # language
-    "<wait><enter>", # keyboard layout
-    "<wait5s><enter>", # network connections
-    "<wait><enter>", # proxy settings
-    "<wait><enter>", # mirror address
-    "<wait><enter>", # mirror address
-    "<wait><tab><tab><tab><tab><tab><enter>", # storage configuration
-    "<wait><enter>", # storage configuration 2
-    "<wait><tab><enter>", # Confirm Destructive Action
-    "<wait>${var.linux_username}<tab>", # your name
-    "<wait>${var.vm_name}<tab>", # server name
-    "<wait>${var.linux_username}<tab>", # username
-    "${var.linux_password}<wait><enter>", # password
-    "${var.linux_password}<wait><enter><enter>", # password again
-    "<wait><enter>", # profile setup
-    "<wait><enter>", # Ubuntu advantage token
-    "<wait><tab><tab><enter>", # SSH Setup
-    "<wait><tab><enter>", # Featured Server Snaps
-    "<wait3.5m><tab><tab><enter>", # Installing Updates
-    "<wait10s><enter>", # Done
+    "<wait30s><enter>",                             # language
+    "<wait><enter>",                                # keyboard layout
+    "<wait5s><enter>",                              # network connections
+    "<wait><enter>",                                # proxy settings
+    "<wait><enter>",                                # mirror address
+    "<wait><enter>",                                # mirror address
+    "<wait><tab><tab><tab><tab><tab><enter>",       # storage configuration
+    "<wait><enter>",                                # storage configuration 2
+    "<wait><tab><enter>",                           # Confirm Destructive Action
+    "<wait>${var.linux_username}<tab>",             # your name
+    "<wait>${var.vm_name}<tab>",                    # server name
+    "<wait>${var.linux_username}<tab>",             # username
+    "${var.linux_password}<wait><enter>",           # password
+    "${var.linux_password}<wait><enter><enter>",    # password again
+    "<wait><enter>",                                # profile setup
+    "<wait><enter>",                                # Ubuntu advantage token
+    "<wait><tab><tab><enter>",                      # SSH Setup
+    "<wait><tab><enter>",                           # Featured Server Snaps
+    "<wait3.5m><tab><tab><enter>",                  # Installing Updates
+    "<wait10s><enter>",                             # Done
     "<wait30s><enter>${var.linux_username}<enter>", #login
     "<wait>${var.linux_password}<enter>",
     "<wait>echo \"${var.linux_password}\" | sudo -S -k apt-get update<wait><enter>",
@@ -121,8 +137,39 @@ source "hyperv-iso" "ubuntu_2004_server" {
   ssh_timeout  = "15m"
 }
 
+source "hyperv-vmcx" "ubuntu_2004_server" {
+
+  clone_from_vmcx_path = var.vmcx_path
+
+  memory = var.memory
+  cpus   = var.cpus
+  disk_additional_size = [
+    var.disk_size
+  ]
+  disk_block_size = 1 # Recommended disk block size for Linux hyper-v guests is 1 MiB
+  generation      = 2
+
+  enable_secure_boot    = false
+  enable_dynamic_memory = true
+  vm_name               = var.vm_name
+  switch_name           = var.virtual_switch_name
+
+  shutdown_command = "echo \"${var.linux_password}\" | sudo -S -k shutdown -P now"
+  shutdown_timeout = "30s"
+
+  output_directory = "C:/vhds/${var.vm_name}"
+
+  ssh_username = var.linux_username
+  ssh_password = var.linux_password
+
+  pause_before_connecting = "10s"
+
+  communicator = "ssh"
+  ssh_timeout  = "15m"
+}
+
 build {
-  name    = "build-rancher-linux-node"
+  name = "build-base-ubuntu-2004-server-vm"
 
   sources = [
     "source.hyperv-iso.ubuntu_2004_server"
@@ -140,10 +187,16 @@ build {
       "newgrp docker",
       "echo \"${var.linux_password}\" | sudo -S -k systemctl enable docker.service",
       "echo \"${var.linux_password}\" | sudo -S -k systemctl enable containerd.service",
-      "echo \"${var.linux_password}\" | sudo -S -k reboot now",
     ]
-    expect_disconnect = true
   }
+}
+
+build {
+  name = "build-rancher-linux-node"
+
+  sources = [
+    "source.hyperv-vmcx.ubuntu_2004_server"
+  ]
 
   provisioner "shell" {
     pause_before = "5s"
@@ -155,28 +208,11 @@ build {
 }
 
 build {
-  name    = "build-rancher-server"
+  name = "build-rancher-server"
 
   sources = [
-    "source.hyperv-iso.ubuntu_2004_server"
+    "source.hyperv-vmcx.ubuntu_2004_server"
   ]
-
-  provisioner "shell" {
-    inline = [
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get update",
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y ca-certificates curl gnupg lsb-release",
-      "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg'",
-      "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null'",
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get update",
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y docker-ce docker-ce-cli containerd.io",
-      "echo \"${var.linux_password}\" | sudo -S -k usermod -aG docker $USER",
-      "newgrp docker",
-      "echo \"${var.linux_password}\" | sudo -S -k systemctl enable docker.service",
-      "echo \"${var.linux_password}\" | sudo -S -k systemctl enable containerd.service",
-      "echo \"${var.linux_password}\" | sudo -S -k reboot now",
-    ]
-    expect_disconnect = true
-  }
 
   provisioner "shell" {
     pause_before = "5s"
