@@ -37,7 +37,7 @@ echo "Starting tailscaled"
 tailscaled ${TAILSCALED_ARGS} &
 PID=$!
 
-UP_ARGS="--accept-dns=false"
+UP_ARGS="--accept-dns=false --advertise-exit-node"
 if [[ ! -z "${ROUTES}" ]]; then
   UP_ARGS="--advertise-routes=${ROUTES} ${UP_ARGS}"
 fi
