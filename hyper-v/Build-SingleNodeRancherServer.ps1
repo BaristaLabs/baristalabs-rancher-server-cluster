@@ -15,7 +15,7 @@ param(
     [bool] $packer_debug = $false
 )
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='SilentlyContinue';
 
 # If the base ubuntu vm doesn't exist at C:\vhds\$base_ubuntu_vmcx_path, create it
 if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
