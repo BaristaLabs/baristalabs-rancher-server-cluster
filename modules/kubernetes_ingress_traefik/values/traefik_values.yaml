@@ -9,10 +9,8 @@ service:
   spec:
     externalTrafficPolicy: Local
 
-# Schedule on the aks agentpool nodes
 nodeSelector:
   kubernetes.io/os: linux
-  kubernetes.azure.com/mode: system
 
 providers:
   kubernetesIngress:

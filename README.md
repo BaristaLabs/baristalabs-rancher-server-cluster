@@ -111,6 +111,11 @@ Now visit rancher.<hostname> to get the Rancher Server UI.
 
 6. Create any clusters you desire
 
+> Note: The Rancher Server environment provisioned is designed to save on resources. It adheres to a 'Small' HA deployment size as described on [the rancher documentation](https://rancher.com/docs/k3s/latest/en/installation/installation-requirements/)
+> Additionally, the Rancher pods are scheduled on the AKS system node pool which is not recommended for production scenarios.
+> To scale up the Rancher Server, create a user node pool of the desired size and nodes.
+> Adding a dedicated database for the for production large clusters is beyond the scope of this project.
+ 
 ## Adding Nodes (Hyper-V)
 
 For on-prem clusters using Hyper-V, you will need to create one or more VMs running docker and associate them with the cluster
