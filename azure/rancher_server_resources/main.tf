@@ -34,12 +34,10 @@ locals {
 
   # Hostnames
   rancher_server_hostnames = {
-    "rancher" = "rancher.${local.hostname}"
-    "whoami"  = "whoami.rancher.${local.hostname}"
+    "whoami"  = "whoami.${data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname}"
   }
 
   cert_admin_email       = "sean@baristalabs.io"
-  cert_ca_use_production = false
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher_server_01" })
 }

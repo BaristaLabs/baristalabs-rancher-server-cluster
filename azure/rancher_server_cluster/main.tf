@@ -13,6 +13,8 @@ locals {
   environment        = "01"
   environment_prefix = "rancher-server"
 
+  rancher_server_hostname   = "rancher.baristalabs.io"
+
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher-server-01" })
 }
 
@@ -62,7 +64,7 @@ module "rancher_server_cluster" {
 
   rancher_server_log_analytics_workspace = module.rancher_server.rancher_server_log_analytics_workspace
 
-  rancher_server_cluster_agent_node_size  = "Standard_D2s_v4"
+  rancher_server_cluster_agent_node_size  = "Standard_B2s"
   rancher_server_cluster_agent_node_count = 3
   rancher_server_cluster_sku_tier         = "Free"
 

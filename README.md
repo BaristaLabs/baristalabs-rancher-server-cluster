@@ -93,6 +93,8 @@ cd ./rancher_server_cluster
 
 The deployment script will associated contexts to the local environment - for instance, adding and setting the current kubectl context to the newly created kubernetes cluster.
 
+This process also creates a DNS zone. Within your domain registrar you'll need to add a NS record for your hostname that indicates the nameservers in the DNS zone.
+
 5. Provision the Rancher Server itself.
 
 Modify any settings within ./rancher_server_resources/main.tf to suit your environment.
@@ -103,8 +105,6 @@ Now, deploy the rancher server resources
 cd ./rancher_server_resources
 ./Deploy-RancherServer.ps1
 ```
-
-This process creates a DNS zone. Within your domain registrar you'll need to add a NS record for your hostname that indicates the nameservers in the DNS zone.
 
 Visit whoami.<hostname> to verify the ingress is functioning.
 Now visit rancher.<hostname> to get the Rancher Server UI.

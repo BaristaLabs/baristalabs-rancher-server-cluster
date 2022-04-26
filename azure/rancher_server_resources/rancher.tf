@@ -23,7 +23,7 @@ module "rancher_server" {
 
   rancher_namespace = kubernetes_namespace.rancher.metadata[0].name
 
-  rancher_hostname = local.rancher_server_hostnames.rancher
+  rancher_hostname = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname
   rancher_replicas = 3
 
   depends_on = [
@@ -37,7 +37,7 @@ data "kubectl_path_documents" "rancher_ingress_routes" {
   pattern = "${path.module}/specs/rancher_ingress_routes.yaml"
 
   vars = {
-    rancher_hostname = local.rancher_server_hostnames.rancher
+    rancher_hostname = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname
   }
 }
 

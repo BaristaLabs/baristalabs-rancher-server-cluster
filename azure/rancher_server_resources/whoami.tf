@@ -31,4 +31,8 @@ resource "kubectl_manifest" "whoami" {
   yaml_body = each.value
 
   override_namespace = kubernetes_namespace.whoami.metadata[0].name
+  
+  depends_on = [
+    module.cert_manager
+  ]
 }
