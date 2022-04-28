@@ -1,2 +1,8 @@
-tailscale:
-  routes: ["10.10.0.0/23","10.10.2.0/23"]
+image:
+  pullPolicy: Always
+  #tag: "v1.24.1"
+
+config:
+  variables:
+    TAILSCALE_ADVERTISE_EXIT_NODES: "true"
+    TAILSCALE_ADVERTISE_ROUTES: "10.10.0.0/23,10.10.2.0/23"

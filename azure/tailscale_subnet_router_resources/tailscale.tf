@@ -18,21 +18,10 @@ resource "kubernetes_namespace" "tailscale" {
   }
 }
 
-resource "kubernetes_secret" "tailscale_auth_key" {
-  metadata {
-    name      = "tailscale-subnet-router-secrets"
-    namespace = kubernetes_namespace.tailscale.metadata[0].name
-  }
-
-  data = {
-    AUTH_KEY = var.tailscale_auth_key
-  }
-}
-
 resource "helm_release" "tailscale_subnet_router" {
   name       = "tailscale-subnet-router"
-  repository = "https://gtaylor.github.io/helm-charts"
-  chart      = "tailscale-subnet-router"
+  repository = "https://charts.visonneau.fr"
+  chart      = "tailscale-relay"
 
   namespace = kubernetes_namespace.tailscale.metadata[0].name
 
@@ -41,17 +30,7 @@ resource "helm_release" "tailscale_subnet_router" {
   ]
 
   set {
-    name  = "image.repository"
-    value = local.tailscale_image_repository
+    name  = "config.authKey"
+    value = var.tailscale_auth_key
   }
-
-  set {
-    name  = "image.tag"
-    value = local.tailscale_image_tag
-  }
-
-  depends_on = [
-    kubernetes_secret.tailscale_auth_key
-  ]
-
 }
