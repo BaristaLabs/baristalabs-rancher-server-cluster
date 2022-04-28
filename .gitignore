@@ -57,3 +57,4 @@ terraform.lock.hcl
 
 ## Ignore packer log files
 **/packerlog.txt
+**/*.iso

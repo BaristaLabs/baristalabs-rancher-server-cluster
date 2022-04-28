@@ -65,9 +65,9 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
 
 # If the Rancher Node VM doesn't exist at C:\vhds\$rancher_linux_node_name, create it
 if (Test-Path -Path "C:\vhds\$rancher_linux_node_name") {
-    Write-Host "Rancher Node VHD already exists"
+    Write-Host "Rancher Linux Node VHD already exists"
 } else {
-    Write-Host "Creating Rancher Node VM..."
+    Write-Host "Creating Rancher Linux Node VM..."
 
     packer init .\templates\ubuntu2004.pkr.hcl
 

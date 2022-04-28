@@ -181,12 +181,14 @@ build {
       "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y ca-certificates curl gnupg lsb-release",
       "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg'",
       "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null'",
+      "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null'",
+      "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list'",
       "echo \"${var.linux_password}\" | sudo -S -k apt-get update",
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y docker-ce docker-ce-cli containerd.io",
+      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y docker-ce docker-ce-cli containerd.io tailscale ctop",
       "echo \"${var.linux_password}\" | sudo -S -k usermod -aG docker $USER",
       "newgrp docker",
       "echo \"${var.linux_password}\" | sudo -S -k systemctl enable docker.service",
-      "echo \"${var.linux_password}\" | sudo -S -k systemctl enable containerd.service",
+      "echo \"${var.linux_password}\" | sudo -S -k systemctl enable containerd.service"
     ]
   }
 }
@@ -217,6 +219,7 @@ build {
   provisioner "shell" {
     pause_before = "5s"
     inline = [
+      "echo \"${var.linux_password}\" | sudo -S -k hostnamectl set-hostname ${var.vm_name}",
       "docker image pull ${var.rancher_server_image_name}",
       "docker run -d --restart=unless-stopped -p 80:80 -p 443:443 --privileged ${var.rancher_server_image_name}",
     ]

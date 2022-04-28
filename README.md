@@ -21,6 +21,9 @@ https://helm.sh/
 Packer
 https://www.packer.io/
 
+PowerISO
+https://www.poweriso.com/tutorials/command-line-argus.htm
+
 Azure CLI
 https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 
@@ -29,7 +32,7 @@ If you're planning on exposing your Rancher Server to the public, you'll also ne
 ### Windows
 To install with [chocolatey](https://chocolatey.org/):
 ``` PS
-choco install pwsh terraform terragrunt helm packer azure-cli
+choco install pwsh terraform terragrunt helm packer azure-cli poweriso
 ```
 
 ### macOS
@@ -139,7 +142,7 @@ https://docs.docker.com/engine/install/linux-postinstall/
 ### Add a Windows node with the Worker role
 1. Download a Windows Server 2019 ISO
 2. Create a new Hyper-V VM using the Windows Server 2019 ISO - Suggest using the non-user experience but YMMV
-3. Activate windows using ```slmgr.vbs /ipk <kproduct key>```
+3. Activate windows using ```slmgr.vbs /ipk <product key>```
 4. Rename the VM using ```Rename-Computer -NewName <hostname> -Restart```
 5. Install docker using the following:
 
