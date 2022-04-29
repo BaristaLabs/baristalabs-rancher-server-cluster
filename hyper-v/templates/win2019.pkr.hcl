@@ -8,7 +8,7 @@ packer {
 }
 
 variable "vm_name" {
-  type    = string
+  type = string
 }
 
 variable "machine_name" {
@@ -17,7 +17,7 @@ variable "machine_name" {
 }
 
 variable "admin_password" {
-  type    = string
+  type = string
 }
 
 variable "windows_product_key" {
@@ -82,9 +82,9 @@ variable "vmcx_path" {
 }
 
 source "hyperv-iso" "windows_server_2019" {
-  iso_urls        = [
+  iso_urls = [
     "c:/isos/en-us_windows_server_2019_updated_aug_2021_x64_dvd_a6431a28.iso",
-    "https://myvs.download.prss.microsoft.com/pr/en-us_windows_server_2019_updated_aug_2021_x64_dvd_a6431a28.iso", 
+    "https://myvs.download.prss.microsoft.com/pr/en-us_windows_server_2019_updated_aug_2021_x64_dvd_a6431a28.iso",
   ]
   iso_checksum    = "sha256:0067AFE7FDC4E61F677BD8C35A209082AA917DF9C117527FC4B2B52A447E89BB"
   iso_target_path = "c:/isos/"
@@ -93,10 +93,10 @@ source "hyperv-iso" "windows_server_2019" {
     "${path.cwd}/setup-files.iso",
   ]
 
-  memory             = var.memory
-  cpus               = var.cpus
-  disk_size          = var.disk_size
-  generation         = 2
+  memory     = var.memory
+  cpus       = var.cpus
+  disk_size  = var.disk_size
+  generation = 2
 
   enable_secure_boot    = false
   enable_dynamic_memory = true
@@ -106,33 +106,33 @@ source "hyperv-iso" "windows_server_2019" {
   shutdown_command = "shutdown /s /t 5 /f /d p:4:1 /c \"Packer Shutdown\""
   shutdown_timeout = "1m"
 
-  output_directory   = "C:/vhds/${var.vm_name}"
+  output_directory = "C:/vhds/${var.vm_name}"
 
-  boot_wait             = "2s"
-  boot_command          = [
+  boot_wait = "2s"
+  boot_command = [
     "<enter>",
     "<wait><enter>",
     "<wait20s><tab><tab><tab><enter>",
-    "<wait><enter>", # Install Now
-    "<wait15s><enter>", # Install Core 2019
-    "<wait><space><enter>", # Accept EULA
-    "<wait><leftShiftOn><down><leftShiftOff><enter>", # Custom
-    "<wait><tab><tab><tab><tab><enter>", # Install on Drive 0
-    "<wait2.5m>", # Wait for install to complete
-    "<enter>", # Admin password must be changed prompt
-    "<wait>${var.admin_password}<tab>", # Admin password
-    "<wait>${var.admin_password}<enter>", # Confirm Password
-    "<wait><enter>", # Your password has been changed
+    "<wait><enter>",                                      # Install Now
+    "<wait15s><enter>",                                   # Install Core 2019
+    "<wait><space><enter>",                               # Accept EULA
+    "<wait><leftShiftOn><down><leftShiftOff><enter>",     # Custom
+    "<wait><tab><tab><tab><tab><enter>",                  # Install on Drive 0
+    "<wait2m>",                                           # Wait for install to complete
+    "<enter>",                                            # Admin password must be changed prompt
+    "<wait>${var.admin_password}<tab>",                   # Admin password
+    "<wait>${var.admin_password}<enter>",                 # Confirm Password
+    "<wait><enter>",                                      # Your password has been changed
     "<wait>PowerShell -File e:\\Enable-WinRM.ps1<enter>", # Enable WinRM
-    "<wait>exit<enter>", # Exit Powershell
+    "<wait>exit<enter>",                                  # Exit Powershell
   ]
 
   pause_before_connecting = "2s"
- 
-  communicator          = "winrm"
-  winrm_username        = "Administrator"
-  winrm_password        = var.admin_password
-  winrm_timeout         = "2.5m"
+
+  communicator   = "winrm"
+  winrm_username = "Administrator"
+  winrm_password = var.admin_password
+  winrm_timeout  = "2.5m"
 }
 
 source "hyperv-vmcx" "windows_server_2019" {
@@ -144,13 +144,12 @@ source "hyperv-vmcx" "windows_server_2019" {
   disk_additional_size = [
     var.disk_size
   ]
-  disk_block_size = 1 # Recommended disk block size for Linux hyper-v guests is 1 MiB
   generation      = 2
 
-  enable_secure_boot    = true
-  secure_boot_template  = "MicrosoftWindows"
+  enable_secure_boot   = true
+  secure_boot_template = "MicrosoftWindows"
 
-  enable_dynamic_memory = true
+  enable_dynamic_memory = false
   vm_name               = var.vm_name
   switch_name           = var.virtual_switch_name
 
@@ -160,11 +159,13 @@ source "hyperv-vmcx" "windows_server_2019" {
   output_directory = "C:/vhds/${var.vm_name}"
 
   pause_before_connecting = "2s"
- 
-  communicator          = "winrm"
-  winrm_username        = "Administrator"
-  winrm_password        = var.admin_password
-  winrm_timeout         = "2.5m"
+
+  communicator   = "winrm"
+  winrm_username = "Administrator"
+  winrm_password = var.admin_password
+  winrm_timeout  = "2.5m"
+  winrm_use_ssl  = true
+  #winrm_insecure = true
 }
 
 build {
@@ -179,6 +180,7 @@ build {
     elevated_password = var.admin_password
 
     inline = [
+      "wmic useraccount where \"name='Administrator'\" set PasswordExpires=FALSE",
       "cscript C:\\Windows\\System32\\slmgr.vbs /ipk ${var.windows_product_key}",
       # "cscript C:\\Windows\\System32\\slmgr.vbs /ato",
     ]
@@ -206,7 +208,8 @@ build {
     inline = [
       "Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force",
       "Start-Service Docker",
-      "e:\\Install-Chocolatey.ps1"
+      "e:\\Install-Chocolatey.ps1",
+      "Copy-Item -Path 'E:\\Disable-WinRM' -Destination 'C:\\' -Force",
     ]
   }
 }

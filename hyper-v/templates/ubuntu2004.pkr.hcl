@@ -135,6 +135,7 @@ source "hyperv-iso" "ubuntu_2004_server" {
 
   communicator = "ssh"
   ssh_timeout  = "15m"
+  headless     = true
 }
 
 source "hyperv-vmcx" "ubuntu_2004_server" {
@@ -166,6 +167,7 @@ source "hyperv-vmcx" "ubuntu_2004_server" {
 
   communicator = "ssh"
   ssh_timeout  = "15m"
+  headless     = true
 }
 
 build {
@@ -203,6 +205,22 @@ build {
   provisioner "shell" {
     pause_before = "5s"
     inline = [
+      "NEW_HOSTNAME=${var.vm_name}",
+      "CUR_HOSTNAME=$(cat /etc/hostname)",
+      "echo \"${var.linux_password}\" | sudo -S -k hostnamectl set-hostname $NEW_HOSTNAME",
+      "echo \"${var.linux_password}\" | sudo -S -k hostname $NEW_HOSTNAME",
+      "echo \"${var.linux_password}\" | sudo -S -k sed -i \"s/$CUR_HOSTNAME/$NEW_HOSTNAME/g\" /etc/hosts",
+      "echo \"${var.linux_password}\" | sudo -S -k sed -i \"s/$CUR_HOSTNAME/$NEW_HOSTNAME/g\" /etc/hostname",
+      "hostname",
+      "echo \"${var.linux_password}\" | sudo -S -k reboot",
+    ]
+
+    expect_disconnect = true
+  }
+
+  provisioner "shell" {
+    pause_before = "5s"
+    inline = [
       "docker image pull ${var.rancher_agent_image_name}",
       "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
     ]
@@ -215,6 +233,22 @@ build {
   sources = [
     "source.hyperv-vmcx.ubuntu_2004_server"
   ]
+
+  provisioner "shell" {
+    pause_before = "5s"
+    inline = [
+      "NEW_HOSTNAME=${var.vm_name}",
+      "CUR_HOSTNAME=$(cat /etc/hostname)",
+      "echo \"${var.linux_password}\" | sudo -S -k hostnamectl set-hostname $NEW_HOSTNAME",
+      "echo \"${var.linux_password}\" | sudo -S -k hostname $NEW_HOSTNAME",
+      "echo \"${var.linux_password}\" | sudo -S -k sed -i \"s/$CUR_HOSTNAME/$NEW_HOSTNAME/g\" /etc/hosts",
+      "echo \"${var.linux_password}\" | sudo -S -k sed -i \"s/$CUR_HOSTNAME/$NEW_HOSTNAME/g\" /etc/hostname",
+      "hostname",
+      "echo \"${var.linux_password}\" | sudo -S -k reboot",
+    ]
+
+    expect_disconnect = true
+  }
 
   provisioner "shell" {
     pause_before = "5s"
