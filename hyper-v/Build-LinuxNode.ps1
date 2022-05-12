@@ -85,6 +85,7 @@ if (Test-Path -Path "C:\vhds\$rancher_linux_node_name") {
         -var "rancher_server_url=$rancher_server_url" `
         -var "rancher_server_token=$rancher_server_token" `
         -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
+        -var "rancher_node_docker_args=$rancher_node_docker_args" `
         -var "memory=16384" `
         -var "cpus=4" `
         -var "disk_size=256000" `
