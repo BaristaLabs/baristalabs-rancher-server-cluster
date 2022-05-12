@@ -49,10 +49,6 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
         -var "vm_name=$base_ubuntu_vmcx_name" `
         -var "linux_username=$linux_username" `
         -var "linux_password=$linux_password" `
-        -var "rancher_server_url=$rancher_server_url" `
-        -var "rancher_server_token=$rancher_server_token" `
-        -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
-        -var "rancher_node_docker_args=$rancher_node_docker_args" `
         -var "disk_size=64000" `
         .\templates\ubuntu2004.pkr.hcl
 
