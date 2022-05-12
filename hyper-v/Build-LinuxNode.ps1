@@ -48,6 +48,7 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
         -var "linux_password=$linux_password" `
         -var "linux_crypted_password=$linux_crypted_password" `
         -var "rancher_node_docker_args=$rancher_node_docker_args" `
+        -var "disk_size=64000" `
         .\templates\ubuntu2004.pkr.hcl
 
     if ($packer_debug -eq $true) {

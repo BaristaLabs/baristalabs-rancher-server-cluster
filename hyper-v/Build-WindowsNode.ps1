@@ -53,6 +53,7 @@ if (Test-Path -Path "C:\vhds\$base_windows_vmcx_name") {
         -var "admin_password=$admin_password" `
         -var "windows_product_key=$windows_product_key" `
         -var "rancher_node_docker_args=$rancher_node_docker_args" `
+        -var "disk_size=64000" `
         .\templates\win2019.pkr.hcl
 
     if ($packer_debug -eq $true) {
