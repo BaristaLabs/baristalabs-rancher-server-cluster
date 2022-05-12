@@ -19,11 +19,6 @@ variable "linux_password" {
   type = string
 }
 
-variable "linux_crypted_password" {
-  type        = string
-  description = "openssl passwd -6 password. must match password from above"
-}
-
 variable "virtual_switch_name" {
   type    = string
   default = "External"
@@ -52,6 +47,21 @@ variable rancher_server_image_name {
 variable rancher_agent_image_name {
   type    = string
   default = "rancher/rancher-agent:v2.6.4"
+}
+
+variable "rancher_server_url" {
+  type    = string
+  default = null
+}
+
+variable "rancher_server_token" {
+  type    = string
+  default = null
+}
+
+variable "rancher_server_ca_checksum" {
+  type    = string
+  default = null
 }
 
 variable "rancher_node_docker_args" {
@@ -212,7 +222,7 @@ build {
     pause_before = "5s"
     inline = [
       "docker image pull ${var.rancher_agent_image_name}",
-      #"docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
+      "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
     ]
   }
 }
