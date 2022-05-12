@@ -56,21 +56,6 @@ variable rancher_agent_image_name {
   default = "rancher/rancher-agent:v2.6.4"
 }
 
-variable "rancher_server_url" {
-  type    = string
-  default = null
-}
-
-variable "rancher_server_token" {
-  type    = string
-  default = null
-}
-
-variable "rancher_server_ca_checksum" {
-  type    = string
-  default = null
-}
-
 variable "rancher_node_docker_args" {
   type    = string
   default = "--worker"
@@ -226,7 +211,7 @@ build {
     inline = [
       "Rename-Computer -NewName ${var.machine_name} -Force",
       "docker image pull ${var.rancher_agent_image_name}",
-      "PowerShell -NoLogo -NonInteractive -Command \"& {docker run -v c:\\:c:\\host  ${var.rancher_agent_image_name} bootstrap --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum}  ${var.rancher_node_docker_args} | iex}\""
+      # "PowerShell -NoLogo -NonInteractive -Command \"& {docker run -v c:\\:c:\\host  ${var.rancher_agent_image_name} bootstrap --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum}  ${var.rancher_node_docker_args} | iex}\""
     ]
   }
 }

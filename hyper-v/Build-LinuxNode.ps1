@@ -11,12 +11,6 @@ param(
     [string] $linux_username,
     [Parameter(Mandatory)]
     [string] $linux_password,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_url,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_token,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_ca_checksum,
     [Parameter()]
     [ValidateNotNullOrEmpty()]
     [ValidateSet('etcd','controlplane','worker')]
@@ -26,6 +20,12 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='SilentlyContinue';
+
+# Join the node roles into a single string
+$rancher_node_docker_args = "--" + ($rancher_node_roles | Join-String -Separator " --")
+
+# Obtain the crypted password using openssl
+$linux_crypted_password = (openssl passwd -6 $linux_password)
 
 # If the base ubuntu vm doesn't exist at C:\vhds\$base_ubuntu_vmcx_path, create it
 if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
@@ -41,19 +41,12 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
         $env:PACKER_LOG_PATH=.\packerlog.txt
     }
 
-    $rancher_node_docker_args = ""
-    foreach ($rancher_node_role in $rancher_node_roles) {
-        $rancher_node_docker_args += " --$rancher_node_role"
-    }
-
     packer build `
         -only="build-base-ubuntu-2004-server-vm.hyperv-iso.ubuntu_2004_server" `
         -var "vm_name=$base_ubuntu_vmcx_name" `
         -var "linux_username=$linux_username" `
         -var "linux_password=$linux_password" `
-        -var "rancher_server_url=$rancher_server_url" `
-        -var "rancher_server_token=$rancher_server_token" `
-        -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
+        -var "linux_crypted_password=$linux_crypted_password" `
         -var "rancher_node_docker_args=$rancher_node_docker_args" `
         .\templates\ubuntu2004.pkr.hcl
 
@@ -77,21 +70,13 @@ if (Test-Path -Path "C:\vhds\$rancher_linux_node_name") {
         $env:PACKER_LOG_PATH=.\packerlog.txt
     }
 
-    $rancher_node_docker_args = ""
-    foreach ($rancher_node_role in $rancher_node_roles) {
-        $rancher_node_docker_args += " --$rancher_node_role"
-    }
-
     packer build `
         -only="build-rancher-linux-node.hyperv-vmcx.ubuntu_2004_server" `
         -var "vmcx_path=c:/vhds/${base_ubuntu_vmcx_name}" `
         -var "vm_name=$rancher_linux_node_name" `
         -var "linux_username=$linux_username" `
         -var "linux_password=$linux_password" `
-        -var "rancher_server_url=$rancher_server_url" `
-        -var "rancher_server_token=$rancher_server_token" `
-        -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
-        -var "rancher_node_docker_args=$rancher_node_docker_args" `
+        -var "linux_crypted_password=$linux_crypted_password" `
         -var "memory=16384" `
         -var "cpus=4" `
         -var "disk_size=256000" `

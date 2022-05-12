@@ -12,10 +12,17 @@ param(
     [Parameter(Mandatory)]
     [string] $linux_password,
     [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [ValidateSet('etcd','controlplane','worker')]
+    [string[]] $rancher_node_roles = @("etcd", "controlplane", "worker"),
+    [Parameter()]
     [bool] $packer_debug = $false
 )
 
 $ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='SilentlyContinue';
+
+# Join the node roles into a single string
+$rancher_node_docker_args = "--" + ($rancher_node_roles | Join-String -Separator " --")
 
 # If the base ubuntu vm doesn't exist at C:\vhds\$base_ubuntu_vmcx_path, create it
 if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
@@ -29,11 +36,6 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
     if ($packer_debug -eq $true) {
         $env:PACKER_LOG=1
         $env:PACKER_LOG_PATH=.\packerlog.txt
-    }
-
-    $rancher_node_docker_args = ""
-    foreach ($rancher_node_role in $rancher_node_roles) {
-        $rancher_node_docker_args += " --$rancher_node_role"
     }
 
     packer build `

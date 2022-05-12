@@ -14,17 +14,18 @@ param(
     [string] $admin_password,
     [Parameter(Mandatory)]
     [string] $windows_product_key,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_url,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_token,
-    [Parameter(Mandatory)]
-    [string] $rancher_server_ca_checksum,
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [ValidateSet('etcd','controlplane','worker')]
+    [string[]] $rancher_node_roles = @("worker"),
     [Parameter()]
     [bool] $packer_debug = $false
 )
 
 $ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='SilentlyContinue';
+
+# Join the node roles into a single string
+$rancher_node_docker_args = "--" + ($rancher_node_roles | Join-String -Separator " --")
 
 # If the base windows vm doesn't exist at C:\vhds\$rancher_windows_node_name, create it
 if (Test-Path -Path "C:\vhds\$base_windows_vmcx_name") {
@@ -51,9 +52,6 @@ if (Test-Path -Path "C:\vhds\$base_windows_vmcx_name") {
         -var "vm_name=$base_windows_vmcx_name" `
         -var "admin_password=$admin_password" `
         -var "windows_product_key=$windows_product_key" `
-        -var "rancher_server_url=$rancher_server_url" `
-        -var "rancher_server_token=$rancher_server_token" `
-        -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
         -var "rancher_node_docker_args=$rancher_node_docker_args" `
         .\templates\win2019.pkr.hcl
 
@@ -83,9 +81,6 @@ if (Test-Path -Path "C:\vhds\$rancher_windows_node_name") {
         -var "vm_name=$rancher_windows_node_name" `
         -var "machine_name=$rancher_windows_node_machine_name" `
         -var "admin_password=$linux_password" `
-        -var "rancher_server_url=$rancher_server_url" `
-        -var "rancher_server_token=$rancher_server_token" `
-        -var "rancher_server_ca_checksum=$rancher_server_ca_checksum" `
         -var "rancher_node_docker_args=$rancher_node_docker_args" `
         -var "memory=16384" `
         -var "cpus=4" `

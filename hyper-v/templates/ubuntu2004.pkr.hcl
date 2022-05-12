@@ -19,6 +19,11 @@ variable "linux_password" {
   type = string
 }
 
+variable "linux_crypted_password" {
+  type        = string
+  description = "openssl passwd -6 password. must match password from above"
+}
+
 variable "virtual_switch_name" {
   type    = string
   default = "External"
@@ -47,21 +52,6 @@ variable rancher_server_image_name {
 variable rancher_agent_image_name {
   type    = string
   default = "rancher/rancher-agent:v2.6.4"
-}
-
-variable "rancher_server_url" {
-  type    = string
-  default = null
-}
-
-variable "rancher_server_token" {
-  type    = string
-  default = null
-}
-
-variable "rancher_server_ca_checksum" {
-  type    = string
-  default = null
 }
 
 variable "rancher_node_docker_args" {
@@ -122,7 +112,7 @@ source "hyperv-iso" "ubuntu_2004_server" {
     "<wait><enter>",                                # Ubuntu advantage token
     "<wait><tab><tab><enter>",                      # SSH Setup
     "<wait><tab><enter>",                           # Featured Server Snaps
-    "<wait3.5m><tab><tab><enter>",                  # Installing Updates
+    "<wait4.5m><tab><tab><enter>",                  # Installing Updates
     "<wait10s><enter>",                             # Done
     "<wait30s><enter>${var.linux_username}<enter>", #login
     "<wait>${var.linux_password}<enter>",
@@ -131,7 +121,7 @@ source "hyperv-iso" "ubuntu_2004_server" {
     "<wait2.5m>echo \"${var.linux_password}\" | sudo -S -k reboot now<enter>" # Done
   ]
 
-  pause_before_connecting = "10s"
+  pause_before_connecting = "2s"
 
   communicator = "ssh"
   ssh_timeout  = "15m"
@@ -222,7 +212,7 @@ build {
     pause_before = "5s"
     inline = [
       "docker image pull ${var.rancher_agent_image_name}",
-      "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
+      #"docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
     ]
   }
 }
