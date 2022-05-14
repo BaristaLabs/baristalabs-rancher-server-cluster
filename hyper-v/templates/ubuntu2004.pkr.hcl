@@ -132,7 +132,7 @@ source "hyperv-iso" "ubuntu_2004_server" {
     "<wait><enter>",                                # Ubuntu advantage token
     "<wait><tab><tab><enter>",                      # SSH Setup
     "<wait><tab><enter>",                           # Featured Server Snaps
-    "<wait${base_image_update_wait_time}><tab><tab><enter>",                  # Installing Updates
+    "<wait${var.base_image_update_wait_time}><tab><tab><enter>",                  # Installing Updates
     "<wait10s><enter>",                             # Done
     "<wait30s><enter>${var.linux_username}<enter>", #login
     "<wait>${var.linux_password}<enter>",
