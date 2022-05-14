@@ -21,7 +21,7 @@ param(
     [string] $tailscale_auth_key,
     [Parameter()]
     [ValidateNotNullOrEmpty()]
-    [string] $base_image_update_wait_time = "4.5m"
+    [string] $base_image_update_wait_time = "4.5m",
     [Parameter()]
     [ValidateNotNullOrEmpty()]
     [ValidateSet('etcd','controlplane','worker')]
