@@ -69,6 +69,11 @@ variable "rancher_node_docker_args" {
   default = "--worker"
 }
 
+variable "tailscale_auth_key" {
+  type    = string
+  default = null
+}
+
 variable "vmcx_path" {
   type    = string
   default = null
@@ -186,7 +191,7 @@ build {
       "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null'",
       "echo \"${var.linux_password}\" | sudo -S -k -- sh -c 'curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list'",
       "echo \"${var.linux_password}\" | sudo -S -k apt-get update",
-      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y docker-ce docker-ce-cli containerd.io tailscale ctop",
+      "echo \"${var.linux_password}\" | sudo -S -k apt-get install -y docker-ce docker-ce-cli containerd.io tailscale parted ctop",
       "echo \"${var.linux_password}\" | sudo -S -k usermod -aG docker $USER",
       "newgrp docker",
       "echo \"${var.linux_password}\" | sudo -S -k systemctl enable docker.service",
@@ -205,6 +210,7 @@ build {
   provisioner "shell" {
     pause_before = "5s"
     inline = [
+      # Set the hostname
       "NEW_HOSTNAME=${var.vm_name}",
       "CUR_HOSTNAME=$(cat /etc/hostname)",
       "echo \"${var.linux_password}\" | sudo -S -k hostnamectl set-hostname $NEW_HOSTNAME",
@@ -221,8 +227,21 @@ build {
   provisioner "shell" {
     pause_before = "5s"
     inline = [
+      # Create partition
+      "echo \"${var.linux_password}\" | sudo -S -k parted -- /dev/sdb mklabel gpt",
+      "echo \"${var.linux_password}\" | sudo -S -k parted -- /dev/sdb mkpart primary ext4 1MiB 100%",
+      "echo \"${var.linux_password}\" | sudo -S -k parted -- /dev/sdb print",
+      "echo \"${var.linux_password}\" | sudo -S -k mkfs -t ext4 /dev/sdb1",
+      "echo \"${var.linux_password}\" | sudo -S -k mkdir -p /mnt/sdb1",
+      "echo \"${var.linux_password}\" | sudo -S -k mount -t auto /dev/sdb1 /mnt/sdb1",
+      "echo \"${var.linux_password}\" | sudo -S -k su -c 'printf \"UUID=$(blkid -o value -s UUID /dev/sdb1)    /mnt/sdb1    ext4    defaults    0    2\n\" >> /etc/fstab'",
+      "echo \"${var.linux_password}\" | sudo -S -k mount -a",
+      # Install Tailscale
+      "echo \"${var.linux_password}\" | sudo -S -k tailscale up --authkey ${var.tailscale_auth_key} --hostname ${var.vm_name}",
+      "TAILSCALE_IP=$(tailscale ip -1)",
+      # Pull and start Rancher
       "docker image pull ${var.rancher_agent_image_name}",
-      "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args}"
+      "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args} --address $TAILSCALE_IP"
     ]
   }
 }
