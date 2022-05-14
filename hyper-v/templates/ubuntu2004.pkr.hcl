@@ -79,6 +79,11 @@ variable "vmcx_path" {
   default = null
 }
 
+variable "base_image_update_wait_time" {
+  type    = string
+  default = "4.5m"
+}
+
 source "hyperv-iso" "ubuntu_2004_server" {
   iso_urls = [
     "c:/isos/ubuntu-20.04.4-live-server-amd64.iso",
@@ -127,7 +132,7 @@ source "hyperv-iso" "ubuntu_2004_server" {
     "<wait><enter>",                                # Ubuntu advantage token
     "<wait><tab><tab><enter>",                      # SSH Setup
     "<wait><tab><enter>",                           # Featured Server Snaps
-    "<wait4.5m><tab><tab><enter>",                  # Installing Updates
+    "<wait${base_image_update_wait_time}><tab><tab><enter>",                  # Installing Updates
     "<wait10s><enter>",                             # Done
     "<wait30s><enter>${var.linux_username}<enter>", #login
     "<wait>${var.linux_password}<enter>",

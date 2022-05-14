@@ -17,8 +17,11 @@ param(
     [string] $rancher_server_token,
     [Parameter(Mandatory)]
     [string] $rancher_server_ca_checksum,
-     [Parameter(Mandatory)]
+    [Parameter(Mandatory)]
     [string] $tailscale_auth_key,
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [string] $base_image_update_wait_time = "4.5m"
     [Parameter()]
     [ValidateNotNullOrEmpty()]
     [ValidateSet('etcd','controlplane','worker')]
@@ -51,6 +54,7 @@ if (Test-Path -Path "C:\vhds\$base_ubuntu_vmcx_name") {
         -var "vm_name=$base_ubuntu_vmcx_name" `
         -var "linux_username=$linux_username" `
         -var "linux_password=$linux_password" `
+        -var "base_image_update_wait_time=$base_image_update_wait_time" `
         -var "disk_size=64000" `
         .\templates\ubuntu2004.pkr.hcl
 
