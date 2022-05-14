@@ -2,6 +2,7 @@
 
 deplyment:
   # replicas: 3
+  kind: DaemonSet
 dashboard:
   enabled: true
 
