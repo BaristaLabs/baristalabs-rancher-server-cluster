@@ -1,6 +1,6 @@
 # https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
-deplyment:
+deployment:
   # replicas: 3
   kind: DaemonSet
 dashboard:
