@@ -22,19 +22,23 @@ data "terraform_remote_state" "rancher_server_cluster" {
 
 # Set up the locals to use for the Rancher Server environment
 locals {
-  hostname = "baristalabs.io"
-
   # Namespaces
   rancher_server_namespaces = {
-    "cert_manager_namespace" = "cert-manager"
-    "rancher_namespace" = "cattle-system"
-    "traefik_namespace" = "traefik-system"
-    "whoami_namespace"  = "whoami"
+    cert_manager_namespace = "cert-manager"
+    rancher_namespace = "cattle-system"
+    traefik_namespace = "traefik-system"
+    whoami_namespace  = "whoami"
+
+    espresso_01_namespace = "espresso-01"
   }
 
   # Hostnames
   rancher_server_hostnames = {
-    "whoami"  = "whoami.${data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname}"
+    whoami  = "whoami.${data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname}"
+  }
+
+  espresso_01_hostnames = {
+    whoami = "whoami.baristalabs.io"
   }
 
   cert_admin_email       = "sean@baristalabs.io"
