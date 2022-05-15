@@ -25,6 +25,11 @@ resource "helm_release" "traefik_ingress" {
   ]
 
   set {
+    name  = "service.type"
+    value = var.service_type == null ? "LoadBalancer" : var.service_type
+  }
+
+  set {
     name  = "additionalArguments"
     value = "{${join(",", local.traefik_additional_arguments)}}"
   }
@@ -36,10 +41,5 @@ resource "helm_release" "traefik_ingress" {
       name  = "service.spec.loadBalancerIP"
       value = var.kubernetes_ingress_public_ip
     }
-  }
-
-  set {
-    name   = "deployment.replicas"
-    value  = var.kubernetes_ingress_replicas
   }
 }

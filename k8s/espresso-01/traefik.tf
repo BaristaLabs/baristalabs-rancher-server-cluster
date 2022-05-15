@@ -3,11 +3,11 @@ resource "kubernetes_namespace" "traefik_ingress" {
   metadata {
 
     labels = {
-      creator = "rancher_server_terraform",
+      creator = "espresso_terraform",
       kind    = "traefik"
     }
 
-    name = local.rancher_server_namespaces.traefik_namespace
+    name = local.espresso_namespaces.traefik_namespace
   }
 
   lifecycle {
@@ -18,12 +18,12 @@ resource "kubernetes_namespace" "traefik_ingress" {
 }
 
 ### Provision a traefik-based ingress
-module "rancher_server_ingress" {
+module "espresso_ingress" {
   source = "../../modules/kubernetes_ingress_traefik"
 
   ingress_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
-  kubernetes_ingress_public_ip = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip
+  service_type = "NodePort"
 
   depends_on = [
     module.cert_manager
@@ -43,6 +43,6 @@ resource "kubectl_manifest" "traefik_config" {
   override_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
   depends_on = [
-    module.rancher_server_ingress
+    module.espresso_ingress
   ]
 }
