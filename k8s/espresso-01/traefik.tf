@@ -21,9 +21,16 @@ resource "kubernetes_namespace" "traefik_ingress" {
 module "espresso_ingress" {
   source = "../../modules/kubernetes_ingress_traefik"
 
+  ingress_name      = "espresso-ingress"
   ingress_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
-  service_type = "NodePort"
+  traefik_service_account_name = "espresso-ingress-traefik"
+
+  service_type        = "NodePort"
+  web_node_port       = local.web_node_port
+  websecure_node_port = local.websecure_node_port
+
+  tailscale_ephemeral_auth_key = var.tailscale_ephemeral_auth_key
 
   traefik_additional_arguments = [
     "--ping",

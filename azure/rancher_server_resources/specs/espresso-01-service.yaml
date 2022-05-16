@@ -11,7 +11,7 @@ spec:
   - name: https
     protocol: TCP
     port: 443
-    targetPort: 30052
+    targetPort: 30071
   selector: {}
 ---
 apiVersion: v1
@@ -32,5 +32,5 @@ subsets:
         port: 30070
         name: "http"
       -
-        port: 30052
+        port: 30071
         name: "https"

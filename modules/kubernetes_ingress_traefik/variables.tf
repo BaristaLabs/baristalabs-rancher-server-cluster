@@ -9,9 +9,21 @@ variable "traefik_additional_arguments" {
   ]
 }
 
+variable "ingress_name" {
+  type        = string
+  description = "the name of the ingress"
+  default     = "traefik-ingress"
+}
+
 variable "ingress_namespace" {
   type        = string
   description = "the name of the ingress namespace such as traefik-ingress"
+}
+
+variable "traefik_service_account_name" {
+  type        = string
+  description = "the name of the traefik service account"
+  default     = null
 }
 
 variable "service_type" {
@@ -28,4 +40,16 @@ variable "kubernetes_ingress_public_ip" {
 variable "tailscale_ephemeral_auth_key" {
   type        = string
   description = "The ephemeral auth key provided by tailscale available in your Tailscale account"
+}
+
+variable "web_node_port" {
+  type        = string
+  description = "the node port for the websecure service when the service type is NodePort"
+  default     = null
+}
+
+variable "websecure_node_port" {
+  type        = string
+  description = "the node port for the websecure service when the service type is NodePort"
+  default     = null
 }

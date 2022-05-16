@@ -12,13 +12,6 @@ resource "kubernetes_role" "tailscale" {
     resources  = ["secrets"]
     verbs      = ["create", "get", "update"]
   }
-
-  # rule {
-  #   api_groups = [""]
-  #   resource_names = ["tailscale"]
-  #   resources = ["secrets"]
-  #   verbs = ["get", "update"]
-  # }
 }
 
 resource "kubernetes_role_binding" "tailscale" {
@@ -35,7 +28,7 @@ resource "kubernetes_role_binding" "tailscale" {
 
   subject {
     kind      = "ServiceAccount"
-    name      = "traefik-ingress"
+    name      = var.traefik_service_account_name == null ? "traefik-ingress" : var.traefik_service_account_name
     namespace = var.ingress_namespace
   }
 
@@ -56,7 +49,7 @@ resource "kubernetes_secret" "tailscale_auth_key" {
 }
 
 resource "helm_release" "traefik_ingress" {
-  name       = "traefik-ingress"
+  name       = var.ingress_name
   repository = "https://helm.traefik.io/traefik"
   chart      = "traefik"
   version    = "10.19.5"
@@ -85,6 +78,24 @@ resource "helm_release" "traefik_ingress" {
     content {
       name  = "service.spec.loadBalancerIP"
       value = var.kubernetes_ingress_public_ip
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.web_node_port == null ? [] : [1]
+
+    content {
+      name  = "ports.web.nodePort"
+      value = var.web_node_port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.websecure_node_port == null ? [] : [1]
+
+    content {
+      name  = "ports.websecure.nodePort"
+      value = var.websecure_node_port
     }
   }
 }
