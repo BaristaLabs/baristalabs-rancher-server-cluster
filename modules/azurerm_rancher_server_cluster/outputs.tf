@@ -23,16 +23,16 @@ output "rancher_server_cluster_host" {
 }
 
 output "rancher_server_cluster_client_certificate" {
-  value = azurerm_kubernetes_cluster.rancher_server.kube_config.0.client_certificate
+  value     = azurerm_kubernetes_cluster.rancher_server.kube_config.0.client_certificate
   sensitive = true
 }
 
 output "rancher_server_cluster_client_key" {
-  value = azurerm_kubernetes_cluster.rancher_server.kube_config.0.client_key
+  value     = azurerm_kubernetes_cluster.rancher_server.kube_config.0.client_key
   sensitive = true
 }
 
 output "rancher_server_cluster_ca_certificate" {
-  value = azurerm_kubernetes_cluster.rancher_server.kube_config.0.cluster_ca_certificate
+  value     = azurerm_kubernetes_cluster.rancher_server.kube_config.0.cluster_ca_certificate
   sensitive = true
 }

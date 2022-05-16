@@ -6,7 +6,7 @@ resource "helm_release" "rancher" {
 
   namespace = var.rancher_namespace
 
-  values = [ 
+  values = [
     file("${path.module}/values/rancher_values.yaml")
   ]
 

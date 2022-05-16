@@ -57,7 +57,7 @@ resource "azurerm_log_analytics_workspace" "rancher_server_monitoring" {
 
 resource "azurerm_log_analytics_solution" "rancher_server_monitoring_containers" {
   count = var.use_container_insights ? 1 : 0
-  
+
   solution_name         = "Containers"
   workspace_resource_id = azurerm_log_analytics_workspace.rancher_server_monitoring[0].id
   workspace_name        = azurerm_log_analytics_workspace.rancher_server_monitoring[0].name
@@ -104,8 +104,8 @@ resource "azurerm_virtual_network" "rancher_server_network" {
 resource "azurerm_virtual_network_peering" "rancher_server_peer" {
   count = var.use_vnet_peer ? 1 : 0
 
-  name                      = "vnet-peering-${var.environment_prefix}-${var.environment}-to-${var.peer_virtual_network_name}"
-  resource_group_name       = azurerm_resource_group.rancher_server.name
+  name                = "vnet-peering-${var.environment_prefix}-${var.environment}-to-${var.peer_virtual_network_name}"
+  resource_group_name = azurerm_resource_group.rancher_server.name
 
   virtual_network_name      = azurerm_virtual_network.rancher_server_network.name
   remote_virtual_network_id = var.peer_virtual_network_id
@@ -118,15 +118,15 @@ resource "azurerm_virtual_network_peering" "rancher_server_peer" {
 resource "azurerm_virtual_network_peering" "peer_to_rancher_server" {
   count = var.use_vnet_peer ? 1 : 0
 
-  name                      = "vnet-peering-${var.peer_virtual_network_name}-to-${var.environment_prefix}-${var.environment}"
-  resource_group_name       = var.peer_virtual_network_resource_group_name
+  name                = "vnet-peering-${var.peer_virtual_network_name}-to-${var.environment_prefix}-${var.environment}"
+  resource_group_name = var.peer_virtual_network_resource_group_name
 
   virtual_network_name      = var.peer_virtual_network_name
   remote_virtual_network_id = azurerm_virtual_network.rancher_server_network.id
 
-  use_remote_gateways       = false
-  allow_forwarded_traffic   = true
-  allow_gateway_transit     = true
+  use_remote_gateways     = false
+  allow_forwarded_traffic = true
+  allow_gateway_transit   = true
 }
 
 resource "azurerm_network_security_group" "rancher_server_network" {

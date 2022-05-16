@@ -62,10 +62,13 @@ resource "azurerm_kubernetes_cluster" "rancher_server" {
 
     orchestrator_version = var.rancher_server_cluster_version
 
-    zones    = var.rancher_server_cluster_azs
+    zones                 = var.rancher_server_cluster_azs
     type                  = "VirtualMachineScaleSets"
     enable_node_public_ip = false
 
+    enable_auto_scaling = true
+    min_count           = 1
+    max_count           = var.rancher_server_cluster_agent_node_count
     #only_critical_addons_enabled = true
   }
 
@@ -219,10 +222,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "rancher_server_cluster_spot_nod
   zones = var.rancher_server_cluster_azs
 
   orchestrator_version = var.rancher_server_cluster_version
-  
-  priority             = "Spot"
-  eviction_policy      = "Delete"
-  spot_max_price       = each.value.spot_max_price
+
+  priority        = "Spot"
+  eviction_policy = "Delete"
+  spot_max_price  = each.value.spot_max_price
 
   vnet_subnet_id = var.rancher_server_aks_subnet.id
 
@@ -232,7 +235,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "rancher_server_cluster_spot_nod
   node_labels = {
     # This label must be present on spot pools
     "kubernetes.azure.com/scalesetpriority" = "spot"
-    "rancher_server_layer" = each.value.layer_name
+    "rancher_server_layer"                  = each.value.layer_name
   }
 
   node_taints = setunion(each.value.node_taints, [

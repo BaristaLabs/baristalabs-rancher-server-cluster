@@ -95,7 +95,7 @@ variable "rancher_server_user_node_pools" {
     os_disk_size_gb = number
   }))
   description = "A map of the Rancher Server user node pools to create"
-  default = {}
+  default     = {}
 }
 
 variable "rancher_server_spot_node_pools" {
@@ -109,7 +109,7 @@ variable "rancher_server_spot_node_pools" {
     spot_max_price  = number
   }))
   description = "A map of the Rancher Server user node pools to create"
-  default = {}
+  default     = {}
 }
 
 variable "tags" {

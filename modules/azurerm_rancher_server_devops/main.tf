@@ -120,11 +120,11 @@ resource "azurerm_user_assigned_identity" "rancher_server_devops" {
 
 # Create a common Key Vault
 resource "azurerm_key_vault" "rancher_server_devops" {
-  name                       = "kv-${var.rancher_server_devops_key_vault_name}-${local.unique_key_vault_nonce}-devops"
-  location                   = var.az_region
-  resource_group_name        = azurerm_resource_group.rancher_server_devops.name
-  tenant_id                  = var.tenant_id
-  sku_name                   = "standard"
+  name                = "kv-${var.rancher_server_devops_key_vault_name}-${local.unique_key_vault_nonce}-devops"
+  location            = var.az_region
+  resource_group_name = azurerm_resource_group.rancher_server_devops.name
+  tenant_id           = var.tenant_id
+  sku_name            = "standard"
 
   soft_delete_retention_days = var.rancher_server_devops_key_vault_soft_delete_retention_days
   purge_protection_enabled   = var.rancher_server_devops_key_vault_purge_protection_enabled
@@ -255,7 +255,7 @@ resource "azurerm_key_vault_secret" "rancher_server_devops_assets_storage_accoun
 
   tags = local.tags
 
-  depends_on = [ azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy ]
+  depends_on = [azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy]
 }
 
 resource "azurerm_key_vault_secret" "rancher_server_devops_assets_storage_account_url" {
@@ -267,7 +267,7 @@ resource "azurerm_key_vault_secret" "rancher_server_devops_assets_storage_accoun
 
   tags = local.tags
 
-  depends_on = [ azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy ]
+  depends_on = [azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy]
 }
 
 data "azurerm_storage_account_blob_container_sas" "rancher_server_devops_assets_sas" {
@@ -275,8 +275,8 @@ data "azurerm_storage_account_blob_container_sas" "rancher_server_devops_assets_
   container_name    = azurerm_storage_container.rancher_server_devops_assets.name
   https_only        = true
 
-  start  = "${formatdate("YYYY-MM-DD", timestamp())}"
-  expiry = "${formatdate("YYYY-MM-DD", timeadd(timestamp(), "17520h"))}"
+  start  = formatdate("YYYY-MM-DD", timestamp())
+  expiry = formatdate("YYYY-MM-DD", timeadd(timestamp(), "17520h"))
 
   permissions {
     read   = true
@@ -297,7 +297,7 @@ resource "azurerm_key_vault_secret" "rancher_server_devops_assets_sas_token" {
 
   tags = local.tags
 
-  depends_on = [ azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy ]
+  depends_on = [azurerm_key_vault_access_policy.rancher_server_devops_service_principal_policy]
 }
 
 resource "azurerm_management_lock" "rancher_server_devops_resource_group_lock" {

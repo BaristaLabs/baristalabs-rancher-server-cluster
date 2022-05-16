@@ -21,15 +21,15 @@ variable "rancher_server_devops_key_vault" {
 }
 
 variable "use_application_insights" {
-  type = bool
+  type        = bool
   description = "Indicates if application insights resources will be created for the environment"
-  default = true
+  default     = true
 }
 
 variable "use_log_analytics" {
-  type = bool
+  type        = bool
   description = "Indicates if application insights resources will be created for the environment"
-  default = true
+  default     = true
 }
 
 variable "log_retention" {
@@ -70,33 +70,33 @@ variable "rancher_server_aks_subnet_cidr" {
 }
 
 variable "only_allow_frontdoor_traffic" {
-  type = bool
+  type        = bool
   description = "Indicates if the nsg associated with the ingress will prevent all traffic except Azure.FrontDoor tag"
-  default = true
+  default     = true
 }
 
 variable "use_vnet_peer" {
-  type = bool
+  type        = bool
   description = "Indicates if the vnet created will be peered with another virtual network"
-  default = false 
+  default     = false
 }
 
 variable "peer_virtual_network_resource_group_name" {
-  type = string
+  type        = string
   description = "Indicates the resource group name of the peer virtual network"
-  default = null
+  default     = null
 }
 
 variable "peer_virtual_network_id" {
-  type = string
+  type        = string
   description = "Indicates the id of the peer virtual network"
-  default = null
+  default     = null
 }
 
 variable "peer_virtual_network_name" {
-  type = string
+  type        = string
   description = "Indicates the name of the peer virtual network"
-  default = null
+  default     = null
 }
 
 variable "rancher_server_ip_whitelist" {

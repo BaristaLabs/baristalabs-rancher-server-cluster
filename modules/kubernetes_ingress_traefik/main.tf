@@ -3,14 +3,14 @@
 
 resource "kubernetes_role" "tailscale" {
   metadata {
-    name = "tailscale"
+    name      = "tailscale"
     namespace = var.ingress_namespace
   }
 
   rule {
     api_groups = [""]
-    resources = ["secrets"]
-    verbs = ["create", "get", "update"]
+    resources  = ["secrets"]
+    verbs      = ["create", "get", "update"]
   }
 
   # rule {
@@ -23,7 +23,7 @@ resource "kubernetes_role" "tailscale" {
 
 resource "kubernetes_role_binding" "tailscale" {
   metadata {
-    name = "tailscale"
+    name      = "tailscale"
     namespace = var.ingress_namespace
   }
 
@@ -46,7 +46,7 @@ resource "kubernetes_role_binding" "tailscale" {
 
 resource "kubernetes_secret" "tailscale_auth_key" {
   metadata {
-    name = "tailscale-auth"
+    name      = "tailscale-auth"
     namespace = var.ingress_namespace
   }
 
@@ -65,7 +65,7 @@ resource "helm_release" "traefik_ingress" {
 
   verify = false
 
-  values = [ 
+  values = [
     file("${path.module}/values/traefik_values.yaml")
   ]
 

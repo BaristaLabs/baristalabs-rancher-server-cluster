@@ -1,5 +1,5 @@
 variable "rancher_namespace" {
-  type = string
+  type        = string
   description = "the name of the rancher namespace such as traefik-ingress"
 }
 

@@ -1,5 +1,5 @@
 variable "traefik_additional_arguments" {
-  type = list(string)
+  type        = list(string)
   description = "indicates the additional arguments to pass to traefik"
   default = [
     "--ping",
@@ -10,12 +10,12 @@ variable "traefik_additional_arguments" {
 }
 
 variable "ingress_namespace" {
-  type = string
+  type        = string
   description = "the name of the ingress namespace such as traefik-ingress"
 }
 
 variable "service_type" {
-  type = string
+  type    = string
   default = "LoadBalancer"
 }
 
