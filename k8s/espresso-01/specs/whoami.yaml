@@ -42,7 +42,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: PathPrefix("/")
+    - match: Host(`${whoami_hostname}`)
       kind: Rule
       services:
       - name: whoami-service
