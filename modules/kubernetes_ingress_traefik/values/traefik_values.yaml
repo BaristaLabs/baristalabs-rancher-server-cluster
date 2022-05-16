@@ -2,6 +2,26 @@
 
 deployment:
   kind: DaemonSet
+  additionalContainers:
+  - name: ts-sidecar
+    imagePullPolicy: Always
+    image: "baristalabs/tailscale-k8s:latest"
+    env:
+      # Store the state in a k8s secret
+    - name: KUBE_SECRET
+      value: "tailscale"
+    - name: USERSPACE
+      value: "false"
+    - name: AUTH_KEY
+      valueFrom:
+        secretKeyRef:
+          name: tailscale-auth
+          key: AUTH_KEY
+          optional: true
+    securityContext:
+      capabilities:
+        add:
+        - NET_ADMIN
 
 dashboard:
   enabled: true

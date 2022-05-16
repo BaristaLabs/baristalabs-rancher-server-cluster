@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "tailscale" {
       kind    = "tailscale"
     }
 
-    name = local.tailscale_namespace
+    name = local.rancher_server_namespaces.tailscale_namespace
   }
 
   lifecycle {

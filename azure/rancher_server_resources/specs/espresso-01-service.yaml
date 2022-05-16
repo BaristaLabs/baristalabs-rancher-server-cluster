@@ -3,15 +3,15 @@ kind: Service
 metadata:
   name: external-espresso-01-service
 spec:
-  type: ExternalName
   ports:
   - name: http
-    targetPort: 30070
+    protocol: TCP
     port: 80
+    targetPort: 30070
   - name: https
-    targetPort: 30052
+    protocol: TCP
     port: 443
-  externalName: 100.80.73.93
+    targetPort: 30052
   selector: {}
 ---
 apiVersion: v1

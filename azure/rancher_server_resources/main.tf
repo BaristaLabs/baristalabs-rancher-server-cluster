@@ -28,6 +28,7 @@ locals {
     rancher_namespace = "cattle-system"
     traefik_namespace = "traefik-system"
     whoami_namespace  = "whoami"
+    tailscale_namespace  = "tailscale"
 
     espresso_01_namespace = "espresso-01"
   }

@@ -1,15 +1,3 @@
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: ${whoami_hostname}
-spec:
-  dnsNames:
-    - ${whoami_hostname}
-  secretName: tls-whoami
-  issuerRef:
-    name: letsencrypt-production
-    kind: ClusterIssuer
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,11 +40,9 @@ metadata:
   name: whoami-route
 spec:
   entryPoints:
-    - websecure
-  tls:
-    secretName: tls-whoami
+    - web
   routes:
-    - match: Host(`${whoami_hostname}`)
+    - match: PathPrefix("/")
       kind: Rule
       services:
       - name: whoami-service

@@ -1,20 +1,65 @@
 // See https://docs.microsoft.com/en-us/azure/dev-spaces/how-to/ingress-https-traefik
 // https://github.com/traefik/traefik-helm-chart
 
-locals {
-  traefik_additional_arguments = [
-    "--ping",
-    "--entrypoints.web.http.redirections.entrypoint.priority=1",
-    "--entrypoints.web.http.redirections.entrypoint.scheme=https",
-    "--entrypoints.web.http.redirections.entryPoint.to=:443"
+resource "kubernetes_role" "tailscale" {
+  metadata {
+    name = "tailscale"
+    namespace = var.ingress_namespace
+  }
+
+  rule {
+    api_groups = [""]
+    resources = ["secrets"]
+    verbs = ["create", "get", "update"]
+  }
+
+  # rule {
+  #   api_groups = [""]
+  #   resource_names = ["tailscale"]
+  #   resources = ["secrets"]
+  #   verbs = ["get", "update"]
+  # }
+}
+
+resource "kubernetes_role_binding" "tailscale" {
+  metadata {
+    name = "tailscale"
+    namespace = var.ingress_namespace
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role.tailscale.metadata.0.name
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "traefik-ingress"
+    namespace = var.ingress_namespace
+  }
+
+  depends_on = [
+    helm_release.traefik_ingress
   ]
+}
+
+resource "kubernetes_secret" "tailscale_auth_key" {
+  metadata {
+    name = "tailscale-auth"
+    namespace = var.ingress_namespace
+  }
+
+  data = {
+    AUTH_KEY = var.tailscale_ephemeral_auth_key
+  }
 }
 
 resource "helm_release" "traefik_ingress" {
   name       = "traefik-ingress"
   repository = "https://helm.traefik.io/traefik"
   chart      = "traefik"
-  version    = "10.19.4"
+  version    = "10.19.5"
 
   namespace = var.ingress_namespace
 
@@ -31,7 +76,7 @@ resource "helm_release" "traefik_ingress" {
 
   set {
     name  = "additionalArguments"
-    value = "{${join(",", local.traefik_additional_arguments)}}"
+    value = "{${join(",", var.traefik_additional_arguments)}}"
   }
 
   dynamic "set" {

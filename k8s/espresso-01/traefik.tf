@@ -25,8 +25,8 @@ module "espresso_ingress" {
 
   service_type = "NodePort"
 
-  depends_on = [
-    module.cert_manager
+  traefik_additional_arguments = [
+    "--ping",
   ]
 }
 
