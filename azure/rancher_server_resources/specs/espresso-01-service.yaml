@@ -34,3 +34,13 @@ subsets:
       -
         port: 30071
         name: "https"
+---
+# Retry 4 times with exponential backoff
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: espresso-01-retry
+spec:
+  retry:
+    attempts: 4
+    initialInterval: 100ms

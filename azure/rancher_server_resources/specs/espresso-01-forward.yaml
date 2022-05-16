@@ -26,3 +26,5 @@ spec:
       - name: external-espresso-01-service
         passHostHeader: true
         port: 80
+  middlewares:
+    - name: espresso-01-retry
