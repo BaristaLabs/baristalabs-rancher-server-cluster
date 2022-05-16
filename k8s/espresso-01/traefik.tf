@@ -34,6 +34,8 @@ module "espresso_ingress" {
 
   traefik_additional_arguments = [
     "--ping",
+    "--entryPoints.web.forwardedHeaders.insecure",
+    "--entryPoints.websecure.forwardedHeaders.insecure",
   ]
 }
 
