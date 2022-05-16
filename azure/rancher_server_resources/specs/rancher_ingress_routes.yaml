@@ -10,6 +10,32 @@ spec:
     name: letsencrypt-production
     kind: ClusterIssuer
 ---
+# Redirect to https
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: http-to-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-route-redirect
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`${rancher_hostname}`)
+      kind: Rule
+      services:
+      - name: noop@internal
+        kind: TraefikService
+      middlewares:
+      - name: http-to-https
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:

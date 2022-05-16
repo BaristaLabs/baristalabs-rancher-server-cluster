@@ -26,6 +26,10 @@ module "rancher_server_ingress" {
   kubernetes_ingress_public_ip = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_ip
   tailscale_ephemeral_auth_key = var.tailscale_ephemeral_auth_key
 
+  traefik_additional_arguments = [
+    "--ping"
+  ]
+
   depends_on = [
     module.cert_manager
   ]
@@ -34,6 +38,10 @@ module "rancher_server_ingress" {
 # Provision the base traefik configuration
 data "kubectl_path_documents" "traefik_config" {
   pattern = "${path.module}/specs/traefik_*.yaml"
+
+  vars = {
+    redirect_url = local.redirect_url
+  }
 }
 
 resource "kubectl_manifest" "traefik_config" {

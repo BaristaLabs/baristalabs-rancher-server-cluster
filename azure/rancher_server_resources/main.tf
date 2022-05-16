@@ -43,6 +43,7 @@ locals {
   }
 
   cert_admin_email       = "sean@baristalabs.io"
+  redirect_url           = "https://www.baristalabs.io"
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher_server_01" })
 }

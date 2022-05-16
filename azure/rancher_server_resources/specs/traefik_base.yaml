@@ -7,3 +7,31 @@ spec:
   redirectScheme:
     scheme: https
     permanent: true
+---
+# Redirect with domain replacement
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-web
+spec:
+  redirectRegex:
+    regex: ^.*
+    replacement: '${redirect_url}'
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: redirect-unknown-route
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: PathPrefix(`/`)
+      kind: Rule
+      services:
+      - name: noop@internal
+        kind: TraefikService
+      middlewares:
+      - name: redirect-web
+  priority: 1
