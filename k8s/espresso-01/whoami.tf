@@ -3,7 +3,7 @@ resource "kubernetes_namespace" "whoami" {
   metadata {
 
     labels = {
-      creator = "espresso_terraform"
+      creator = local.creator_name
       kind    = "whoami"
     }
 

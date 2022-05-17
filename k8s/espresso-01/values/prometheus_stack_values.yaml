@@ -1,0 +1,13 @@
+# https://github.com/prometheus-community/helm-charts/blob/main/charts/kube-prometheus-stack/values.yaml
+storageSpec:
+  volumeClaimTemplate:
+    spec:
+      storageClassName: longhorn
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 50Gi
+    selector: {}
+
+grafana:
+  defaultDashboardsTimezone: "America/New_York"

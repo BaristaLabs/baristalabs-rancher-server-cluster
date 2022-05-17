@@ -39,6 +39,8 @@ locals {
   }
 
   espresso_01_hostnames = {
+    grafana      = "grafana.baristalabs.io"
+
     whoami = "whoami.baristalabs.io"
   }
 

@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana-route
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`${grafana_hostname}`)
+      kind: Rule
+      services:
+      - name: prometheus-stack-grafana
+        passHostHeader: true
+        port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: alertmanager-route
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`${alertmanager_hostname}`)
+      kind: Rule
+      services:
+      - name: prometheus-stack-kube-prom-alertmanager
+        passHostHeader: true
+        port: 9093

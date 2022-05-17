@@ -1,17 +1,26 @@
 # Set up the locals to use for the Espresso-01 environment
 locals {
   hostname = "baristalabs.io"
+  creator_name = "espresso_terraform"
 
   # Namespaces
   espresso_namespaces = {
     "cert_manager_namespace" = "cert-manager"
     "traefik_namespace"      = "traefik-system"
+    "dapr_namespace"         = "dapr-system"
+    "prometheus_namespace"   = "prometheus"
+    "jaeger_namespace"       = "jaeger"
+    "redis_namespace"        = "redis"
+
     "whoami_namespace"       = "whoami"
   }
 
   # Hostnames
   espresso_hostnames = {
-    "whoami" = "whoami.${local.hostname}"
+    grafana = "grafana.${local.hostname}"
+    alertmanager = "alertmanager.${local.hostname}"
+    
+    whoami = "whoami.${local.hostname}"
   }
 
   web_node_port       = 30070
