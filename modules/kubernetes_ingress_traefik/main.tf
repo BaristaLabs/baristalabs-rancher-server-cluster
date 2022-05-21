@@ -48,6 +48,21 @@ resource "kubernetes_secret" "tailscale_auth_key" {
   }
 }
 
+locals {
+  host_only_security_context = {
+    capabilities = {
+      drop = [ "ALL" ]
+      add = [ "NET_BIND_SERVICE" ]
+    }
+    readOnlyRootFilesystem = true
+    runAsGroup = 0
+    runAsNonRoot = false
+    runAsUser = 0
+  }
+  drop_all = [ "ALL" ]
+  add_net_bind = [ "NET_BIND_SERVICE" ]
+}
+
 resource "helm_release" "traefik_ingress" {
   name       = var.ingress_name
   repository = "https://helm.traefik.io/traefik"
@@ -59,7 +74,8 @@ resource "helm_release" "traefik_ingress" {
   verify = false
 
   values = [
-    file("${path.module}/values/traefik_values.yaml")
+    file("${path.module}/values/traefik_values.yaml"),
+    var.use_host_network == true ? file("${path.module}/values/traefik_hostnetwork_values.yaml") : ""
   ]
 
   set {
@@ -82,11 +98,47 @@ resource "helm_release" "traefik_ingress" {
   }
 
   dynamic "set" {
+    for_each = var.web_port == 8000 ? [] : [1]
+
+    content {
+      name  = "ports.web.port"
+      value = var.web_port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.websecure_port == 8443 ? [] : [1]
+
+    content {
+      name  = "ports.websecure.port"
+      value = var.websecure_port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.web_host_port == null ? [] : [1]
+
+    content {
+      name  = "ports.web.hostPort"
+      value = var.web_host_port
+    }
+  }
+
+  dynamic "set" {
     for_each = var.web_node_port == null ? [] : [1]
 
     content {
       name  = "ports.web.nodePort"
       value = var.web_node_port
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.websecure_host_port == null ? [] : [1]
+
+    content {
+      name  = "ports.websecure.hostPort"
+      value = var.websecure_host_port
     }
   }
 

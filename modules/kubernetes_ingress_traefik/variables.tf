@@ -42,9 +42,33 @@ variable "tailscale_ephemeral_auth_key" {
   description = "The ephemeral auth key provided by tailscale available in your Tailscale account"
 }
 
+variable "web_port" {
+  type        = string
+  description = "the port for the web service"
+  default     = 8000
+}
+
+variable "web_host_port" {
+  type        = string
+  description = "the host port for the web service"
+  default     = null
+}
+
 variable "web_node_port" {
   type        = string
-  description = "the node port for the websecure service when the service type is NodePort"
+  description = "the node port for the web service when the service type is NodePort"
+  default     = null
+}
+
+variable "websecure_port" {
+  type        = string
+  description = "the port for the web service"
+  default     = 8443
+}
+
+variable "websecure_host_port" {
+  type        = string
+  description = "the host port for the web service when the service type is NodePort"
   default     = null
 }
 
@@ -52,4 +76,10 @@ variable "websecure_node_port" {
   type        = string
   description = "the node port for the websecure service when the service type is NodePort"
   default     = null
+}
+
+variable "use_host_network" {
+  type        = bool
+  description = "whether to use host network for the ingress"
+  default     = false
 }

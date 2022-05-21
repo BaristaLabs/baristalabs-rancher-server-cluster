@@ -28,7 +28,11 @@ module "espresso_ingress" {
   traefik_service_account_name = "espresso-ingress-traefik"
 
   service_type        = "NodePort"
+
+  web_host_port       = 80
   web_node_port       = local.web_node_port
+
+  websecure_host_port = 443
   websecure_node_port = local.websecure_node_port
 
   tailscale_ephemeral_auth_key = var.tailscale_ephemeral_auth_key
