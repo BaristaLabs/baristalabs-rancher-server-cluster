@@ -8,6 +8,13 @@ resource "kubernetes_namespace" "prometheus" {
 
     name = local.espresso_namespaces.prometheus_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+      metadata[0].labels,
+    ]
+  }
 }
 
 resource "helm_release" "prometheus_stack" {

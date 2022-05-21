@@ -8,6 +8,13 @@ resource "kubernetes_namespace" "redis" {
 
     name = local.espresso_namespaces.redis_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+      metadata[0].labels,
+    ]
+  }
 }
 
 resource "helm_release" "bitnami_redis" {

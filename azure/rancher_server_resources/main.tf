@@ -29,6 +29,7 @@ locals {
     traefik_namespace = "traefik-system"
     whoami_namespace  = "whoami"
     tailscale_namespace  = "tailscale"
+    coredns_external_namespace = "coredns-external"
 
     espresso_01_namespace = "espresso-01"
   }

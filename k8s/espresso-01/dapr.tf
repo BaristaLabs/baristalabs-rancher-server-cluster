@@ -8,6 +8,13 @@ resource "kubernetes_namespace" "dapr_namespace" {
 
     name = local.espresso_namespaces.dapr_namespace
   }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations,
+      metadata[0].labels,
+    ]
+  }
 }
 
 resource "helm_release" "dapr" {
