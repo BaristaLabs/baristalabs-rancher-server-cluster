@@ -42,7 +42,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`${whoami_hostname}`)
+    - match: Host(`${whoami_hostname}`) || Host(`${whoami_internal_hostname}`)
       kind: Rule
       services:
       - name: whoami-service

@@ -23,7 +23,8 @@ data "kubectl_path_documents" "whoami" {
   pattern = "${path.module}/specs/whoami.yaml"
 
   vars = {
-    whoami_hostname = local.espresso_hostnames.whoami
+    whoami_hostname          = local.espresso_hostnames.whoami
+    whoami_internal_hostname = local.espresso_hostnames.whoami_internal
   }
 }
 

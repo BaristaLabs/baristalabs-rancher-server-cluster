@@ -20,7 +20,8 @@ locals {
     grafana = "grafana.${local.hostname}"
     alertmanager = "alertmanager.${local.hostname}"
     
-    whoami = "whoami.${local.hostname}"
+    whoami          = "whoami.${local.hostname}"
+    whoami_internal = "whoami.espresso.local"
   }
 
   web_node_port       = 30070

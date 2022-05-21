@@ -33,24 +33,26 @@ servers:
   - name: reload
   - name: loadbalance
 - zones:
-  - zone: baristalabs
+  - zone: espresso.local
     scheme: dns://
     use_tcp: false
   port: 53
   plugins:
   - name: file
-    parameters: /etc/coredns/baristalabs-internal.db
+    parameters: /etc/coredns/espresso-local.db
+  - name: forward
+    parameters: . 1.1.1.1 1.0.0.1
 
 zoneFiles:
- - filename: baristalabs-internal.db
-   domain: baristalabs
+ - filename: espresso-local.db
+   domain: espresso.local
    contents: |
-     baristalabs.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-     baristalabs.   IN NS  b.iana-servers.net.
-     baristalabs.   IN NS  a.iana-servers.net.
-     baristalabs.   IN A   100.80.73.93
-     baristalabs.   IN A   100.98.77.13
-     baristalabs.   IN A   100.66.78.81
-     *.baristalabs. IN A   100.80.73.93
-     *.baristalabs. IN A   100.98.77.13
-     *.baristalabs. IN A   100.66.78.81
+     espresso.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+     espresso.local.   IN NS  b.iana-servers.net.
+     espresso.local.   IN NS  a.iana-servers.net.
+     espresso.local.   IN A   100.80.73.93
+     espresso.local.   IN A   100.98.77.13
+     espresso.local.   IN A   100.66.78.81
+     *.espresso.local. IN A   100.80.73.93
+     *.espresso.local. IN A   100.98.77.13
+     *.espresso.local. IN A   100.66.78.81
