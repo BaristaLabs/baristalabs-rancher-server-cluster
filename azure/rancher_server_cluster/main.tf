@@ -15,8 +15,8 @@ locals {
   environment        = "01"
   environment_prefix = "rancher-server"
 
-  rancher_server_hostname = "rancher.baristalabs.io"
-  baristalabs_hostname    = "baristalabs.io"
+  domain_hostname         = "baristalabs.io"
+  rancher_server_hostname = "rancher"
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher-server-01" })
 }

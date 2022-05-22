@@ -16,11 +16,11 @@ output "rancher_server_cluster_name" {
 }
 
 output "rancher_server_cluster_hostname" {
-  value = azurerm_dns_zone.rancher_server.name
+  value = trim(azurerm_dns_a_record.rancher_server_hostname.fqdn, ".")
 }
 
 output "rancher_server_cluster_dns_name_servers" {
-  value = azurerm_dns_zone.rancher_server.name_servers
+  value = azurerm_dns_zone.domain.name_servers
 }
 
 output "rancher_server_cluster_ip_id" {
@@ -51,10 +51,6 @@ output "rancher_server_cluster_identity" {
   value = module.rancher_server_cluster.rancher_server_cluster.identity[0].principal_id
 }
 
-output "rancher_server_dns_zone" {
-  value = azurerm_dns_zone.rancher_server
-}
-
-output "baristalabs_dns_zone" {
-  value = azurerm_dns_zone.baristalabs
+output "domain_dns_zone" {
+  value = azurerm_dns_zone.domain
 }

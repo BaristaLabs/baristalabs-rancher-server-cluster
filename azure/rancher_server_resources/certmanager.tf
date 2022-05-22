@@ -33,10 +33,8 @@ data "kubectl_path_documents" "cert_manager_config" {
     CERT_ADMIN_EMAIL = local.cert_admin_email
 
     AZURE_SUBSCRIPTION_ID = data.azurerm_client_config.current.subscription_id
-    RANCHER_AZURE_DNS_ZONE_RESOURCE_GROUP = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_dns_zone.resource_group_name
-    RANCHER_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_dns_zone.name
-    DOMAIN_AZURE_DNS_ZONE_RESOURCE_GROUP = data.terraform_remote_state.rancher_server_cluster.outputs.baristalabs_dns_zone.resource_group_name
-    DOMAIN_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.baristalabs_dns_zone.name
+    DOMAIN_AZURE_DNS_ZONE_RESOURCE_GROUP = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.resource_group_name
+    DOMAIN_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.name
     MANAGED_IDENTITY_CLIENT_ID = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_kubelet_client_id
   }
 }

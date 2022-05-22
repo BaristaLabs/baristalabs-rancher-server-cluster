@@ -20,7 +20,7 @@ spec:
     - ${rancher_hostname}
   secretName: tls-rancher-ingress-wildcard
   issuerRef:
-    name: letsencrypt-wildcard-production
+    name: letsencrypt-domain-wildcard-production
     kind: ClusterIssuer
   commonName: '*.${rancher_hostname}'
   acme:
