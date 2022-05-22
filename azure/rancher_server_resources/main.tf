@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 data "terraform_remote_state" "rancher_server_devops" {
   backend = "azurerm"
 
@@ -31,6 +33,7 @@ locals {
     tailscale_namespace  = "tailscale"
     coredns_external_namespace = "coredns-external"
 
+    domain_namespace      = "baristalabs"
     espresso_01_namespace = "espresso-01"
   }
 
@@ -46,6 +49,8 @@ locals {
   }
 
   cert_admin_email       = "sean@baristalabs.io"
+
+  root_hostname          = "baristalabs.io"
   redirect_url           = "https://www.baristalabs.io"
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher_server_01" })

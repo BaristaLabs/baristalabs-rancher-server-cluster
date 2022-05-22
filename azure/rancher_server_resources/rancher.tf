@@ -48,6 +48,7 @@ resource "kubectl_manifest" "rancher_ingress_routes" {
     override_namespace = kubernetes_namespace.rancher.metadata[0].name
 
     depends_on = [
+      kubectl_manifest.cert_manager_config,
       module.rancher_server_ingress,
       module.rancher_server
     ]

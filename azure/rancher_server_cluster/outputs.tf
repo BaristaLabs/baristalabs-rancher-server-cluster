@@ -43,6 +43,18 @@ output "rancher_server_cluster_kubelet_identity" {
   value = module.rancher_server_cluster.rancher_server_cluster.kubelet_identity[0].object_id
 }
 
+output "rancher_server_cluster_kubelet_client_id" {
+  value = module.rancher_server_cluster.rancher_server_cluster.kubelet_identity[0].client_id
+}
+
 output "rancher_server_cluster_identity" {
   value = module.rancher_server_cluster.rancher_server_cluster.identity[0].principal_id
+}
+
+output "rancher_server_dns_zone" {
+  value = azurerm_dns_zone.rancher_server
+}
+
+output "baristalabs_dns_zone" {
+  value = azurerm_dns_zone.baristalabs
 }

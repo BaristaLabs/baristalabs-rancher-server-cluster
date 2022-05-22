@@ -1,0 +1,77 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${hostname}-wildcard
+spec:
+  dnsNames:
+    - '*.${hostname}'
+    - ${hostname}
+  secretName: tls-${hostname}-wildcard
+  issuerRef:
+    name: letsencrypt-domain-wildcard-production
+    kind: ClusterIssuer
+  commonName: '*.${hostname}'
+  acme:
+    config:
+    - dns01:
+        provider: azure-dns
+        ingressClass: traefik
+      domains:
+      - '*.${hostname}'
+      - ${hostname}
+---
+# Redirect to https
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: http-to-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+# Redirect with domain replacement
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: ${hostname}-redirect
+spec:
+  redirectRegex:
+    regex: ^https://(.*?)\.?${hostname}
+    replacement: https://www.${hostname}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ${hostname}-tls-redirect-route
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: HostRegexp(`${hostname}`,`{subdomain:^.*?}.${hostname}`)
+      kind: Rule
+      services:
+      - name: noop@internal
+        kind: TraefikService
+      middlewares:
+      - name: http-to-https
+      priority: 10000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ${hostname}-www-redirect-route
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-${hostname}-wildcard
+  routes:
+    - match: HostRegexp(`${hostname}`,`{subdomain:^.*?}.${hostname}`)
+      kind: Rule
+      services:
+      - name: noop@internal
+        kind: TraefikService
+      middlewares:
+      - name: ${hostname}-redirect
+      priority: 1

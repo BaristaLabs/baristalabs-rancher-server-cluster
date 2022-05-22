@@ -10,6 +10,28 @@ spec:
     name: letsencrypt-production
     kind: ClusterIssuer
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ${rancher_hostname}-wildcard
+spec:
+  dnsNames:
+    - '*.${rancher_hostname}'
+    - ${rancher_hostname}
+  secretName: tls-rancher-ingress-wildcard
+  issuerRef:
+    name: letsencrypt-wildcard-production
+    kind: ClusterIssuer
+  commonName: '*.${rancher_hostname}'
+  acme:
+    config:
+    - dns01:
+        provider: azure-dns
+        ingressClass: traefik
+      domains:
+      - '*.${rancher_hostname}'
+      - ${rancher_hostname}
+---
 # Redirect to https
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
@@ -20,21 +42,51 @@ spec:
     scheme: https
     permanent: true
 ---
+# Redirect with domain replacement
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: rancher-redirect
+spec:
+  redirectRegex:
+    regex: ^https://(.*?)\.?${rancher_hostname}
+    replacement: https://${rancher_hostname}
+---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: rancher-route-redirect
+  name: rancher-ssl-redirect
 spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`${rancher_hostname}`)
+    - match: HostRegexp(`${rancher_hostname}`, `{subdomain:^.*?}.${rancher_hostname}`)
       kind: Rule
       services:
       - name: noop@internal
         kind: TraefikService
       middlewares:
       - name: http-to-https
+      priority: 10000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rancher-route-redirect
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    secretName: tls-rancher-ingress-wildcard
+  routes:
+    - match: HostRegexp(`{subdomain:^.*?}.${rancher_hostname}`)
+      kind: Rule
+      services:
+      - name: noop@internal
+        kind: TraefikService
+      middlewares:
+      - name: rancher-redirect
+      priority: 1
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -44,7 +96,7 @@ spec:
   entryPoints:
     - websecure
   tls:
-    secretName: tls-rancher-ingress
+    secretName: tls-rancher-ingress-wildcard
   routes:
     - match: Host(`${rancher_hostname}`)
       kind: Rule

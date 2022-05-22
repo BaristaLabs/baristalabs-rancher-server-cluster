@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 data "terraform_remote_state" "rancher_server_devops" {
   backend = "azurerm"
   config = {
@@ -14,6 +16,7 @@ locals {
   environment_prefix = "rancher-server"
 
   rancher_server_hostname = "rancher.baristalabs.io"
+  baristalabs_hostname    = "baristalabs.io"
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher-server-01" })
 }

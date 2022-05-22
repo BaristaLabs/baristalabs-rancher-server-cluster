@@ -38,6 +38,8 @@ servers:
     use_tcp: false
   port: 53
   plugins:
+  - name: loadbalance
+    parameters: round_robin
   - name: file
     parameters: /etc/coredns/espresso-local.db
   - name: forward
