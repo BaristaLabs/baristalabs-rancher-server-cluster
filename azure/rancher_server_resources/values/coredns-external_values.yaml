@@ -9,6 +9,7 @@ service:
   loadBalancerIP: 10.10.3.100
 
 isClusterService: false
+replicaCount: 2
 
 servers:
 - zones:

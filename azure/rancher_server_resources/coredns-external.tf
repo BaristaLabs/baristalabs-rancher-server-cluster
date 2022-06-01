@@ -26,6 +26,8 @@ resource "helm_release" "coredns_external" {
   repository = "https://coredns.github.io/helm"
   chart      = "coredns"
 
+  version = "1.19.4"
+
   namespace = kubernetes_namespace.coredns_external.metadata[0].name
 
   values = [ 
