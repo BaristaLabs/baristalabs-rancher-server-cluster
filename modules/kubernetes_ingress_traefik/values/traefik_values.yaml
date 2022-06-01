@@ -22,6 +22,14 @@ deployment:
       capabilities:
         add:
         - NET_ADMIN
+    livenessProbe:
+      exec:
+        command:
+        - wget
+        - https://hello.ts.net/healthz
+      initialDelaySeconds: 10
+      periodSeconds: 600
+
 
 dashboard:
   enabled: true
