@@ -43,7 +43,11 @@ servers:
   - name: file
     parameters: /etc/coredns/espresso-local.db
   - name: forward
-    parameters: . 1.1.1.1 1.0.0.1
+    parameters: . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
+  - name: cache
+    parameters: 30
+  - name: loop
+  - name: reload
 
 zoneFiles:
  - filename: espresso-local.db
