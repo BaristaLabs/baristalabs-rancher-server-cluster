@@ -5,7 +5,7 @@ variable "traefik_additional_arguments" {
     "--ping",
     "--entrypoints.web.http.redirections.entrypoint.priority=1",
     "--entrypoints.web.http.redirections.entrypoint.scheme=https",
-    "--entrypoints.web.http.redirections.entryPoint.to=:443"
+    "--entrypoints.web.http.redirections.entryPoint.to=:443",
   ]
 }
 

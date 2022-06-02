@@ -47,6 +47,11 @@ module "espresso_ingress" {
 # Provision the base traefik configuration
 data "kubectl_path_documents" "traefik_config" {
   pattern = "${path.module}/specs/traefik_*.yaml"
+
+  vars = {
+    TRAEFIK_INSTANCE = "espresso-ingress"
+    TRAEFIK_NAMESPACE = kubernetes_namespace.traefik_ingress.metadata[0].name
+  }
 }
 
 resource "kubectl_manifest" "traefik_config" {

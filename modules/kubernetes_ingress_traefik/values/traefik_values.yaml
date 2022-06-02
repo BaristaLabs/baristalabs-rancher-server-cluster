@@ -2,6 +2,8 @@
 
 deployment:
   kind: DaemonSet
+  podLabels:
+    app: traefik
   additionalContainers:
   - name: ts-sidecar
     imagePullPolicy: Always
@@ -49,7 +51,14 @@ metrics:
   prometheus:
     addEntryPointsLabels: true
     addServicesLabels: true
-    buckets: [0.100000, 0.300000, 1.200000, 5.000000]
+    addRoutersLabels: true
+    entryPoint: metrics
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+      - 10.0
 
 # tolerations:
 # - key: "CriticalAddonsOnly"
