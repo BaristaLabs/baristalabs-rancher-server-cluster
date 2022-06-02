@@ -11,3 +11,34 @@ storageSpec:
 
 grafana:
   defaultDashboardsTimezone: "America/New_York"
+  plugins:
+   - digrich-bubblechart-panel
+   - grafana-clock-panel
+   - grafana-piechart-panel
+   - briangann-gauge-panel
+   - jdbranham-diagram-panel
+  additionalDataSources: 
+    - name: loki
+      access: proxy
+      orgId: 1
+      type: loki
+      url: http://loki:3100
+      version: 1
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: true
+          editable: false
+          options:
+            path: /var/lib/grafana/dashboards/default
+  dashboards:
+    default:
+      traefik2:
+        gnetId: 12250
+        revision: 1
+        datasource: Prometheus
