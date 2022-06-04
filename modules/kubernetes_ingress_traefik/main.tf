@@ -84,6 +84,11 @@ resource "helm_release" "traefik_ingress" {
   }
 
   set {
+    name  = "service.spec.externalTrafficPolicy"
+    value = var.service_external_traffic_policy == null ? var.service_type != "ClusterIP" ? "Cluster" : "Local" : var.service_external_traffic_policy
+  }
+
+  set {
     name  = "additionalArguments"
     value = "{${join(",", var.traefik_additional_arguments)}}"
   }

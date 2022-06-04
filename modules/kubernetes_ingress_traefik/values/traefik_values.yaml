@@ -36,10 +36,6 @@ deployment:
 dashboard:
   enabled: true
 
-service:
-  spec:
-    externalTrafficPolicy: Local
-
 nodeSelector:
   kubernetes.io/os: linux
 

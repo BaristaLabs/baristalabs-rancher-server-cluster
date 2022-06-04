@@ -31,6 +31,11 @@ variable "service_type" {
   default = "LoadBalancer"
 }
 
+variable "service_external_traffic_policy" {
+  type    = string
+  default = null
+}
+
 variable "kubernetes_ingress_public_ip" {
   type        = string
   description = "kubernetes ingress public ip"
