@@ -244,9 +244,8 @@ build {
       # Install Tailscale
       "echo \"${var.linux_password}\" | sudo -S -k tailscale up --authkey ${var.tailscale_auth_key} --hostname ${var.vm_name}",
       "TAILSCALE_IP=$(tailscale ip -1)",
-      # Pull and start Rancher
-      "docker image pull ${var.rancher_agent_image_name}",
-      "docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run  ${var.rancher_agent_image_name} --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args} --address $TAILSCALE_IP"
+      # Start Rancher
+      "echo \"${var.linux_password}\" | sudo -S -k su -c \"curl -fL ${var.rancher_server_url}/system-agent-install.sh | sh -s - --server ${var.rancher_server_url} --label 'cattle.io/os=linux' --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum} ${var.rancher_node_docker_args} --address $TAILSCALE_IP\"",
     ]
   }
 }
