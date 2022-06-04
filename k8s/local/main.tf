@@ -34,7 +34,7 @@ locals {
     coredns_external_namespace = "coredns-external"
 
     domain_namespace      = "baristalabs"
-    espresso_01_namespace = "espresso-01"
+    homelab_01_namespace = "homelab-01"
   }
 
   # Hostnames
@@ -42,7 +42,7 @@ locals {
     whoami  = "whoami.${data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_hostname}"
   }
 
-  espresso_01_hostnames = {
+  homelab_01_hostnames = {
     grafana      = "grafana.baristalabs.io"
 
     whoami = "whoami.baristalabs.io"

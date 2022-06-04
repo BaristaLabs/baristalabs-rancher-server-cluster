@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "redis" {
       kind    = "redis"
     }
 
-    name = local.espresso_namespaces.redis_namespace
+    name = local.homelab_namespaces.redis_namespace
   }
 
   lifecycle {

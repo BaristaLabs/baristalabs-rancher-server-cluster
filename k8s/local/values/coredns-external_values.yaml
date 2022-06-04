@@ -14,6 +14,8 @@ replicaCount: 2
 servers:
 - zones:
   - zone: .
+    scheme: dns://
+    use_tcp: false
   port: 53
   plugins:
   - name: errors
@@ -34,7 +36,7 @@ servers:
   - name: reload
   - name: loadbalance
 - zones:
-  - zone: espresso.local
+  - zone: homelab.local
     scheme: dns://
     use_tcp: false
   port: 53
@@ -42,7 +44,7 @@ servers:
   - name: loadbalance
     parameters: round_robin
   - name: file
-    parameters: /etc/coredns/espresso-local.db
+    parameters: /etc/coredns/homelab-local.db
   - name: forward
     parameters: . 1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4
   - name: cache
@@ -51,15 +53,15 @@ servers:
   - name: reload
 
 zoneFiles:
- - filename: espresso-local.db
-   domain: espresso.local
+ - filename: homelab-local.db
+   domain: homelab.local
    contents: |
-     espresso.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
-     espresso.local.   IN NS  b.iana-servers.net.
-     espresso.local.   IN NS  a.iana-servers.net.
-     espresso.local.   IN A   100.80.73.93
-     espresso.local.   IN A   100.98.77.13
-     espresso.local.   IN A   100.66.78.81
-     *.espresso.local. IN A   100.80.73.93
-     *.espresso.local. IN A   100.98.77.13
-     *.espresso.local. IN A   100.66.78.81
+     homelab.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
+     homelab.local.   IN NS  b.iana-servers.net.
+     homelab.local.   IN NS  a.iana-servers.net.
+     homelab.local.   IN A   100.80.73.93
+     homelab.local.   IN A   100.98.77.13
+     homelab.local.   IN A   100.66.78.81
+     *.homelab.local. IN A   100.80.73.93
+     *.homelab.local. IN A   100.98.77.13
+     *.homelab.local. IN A   100.66.78.81

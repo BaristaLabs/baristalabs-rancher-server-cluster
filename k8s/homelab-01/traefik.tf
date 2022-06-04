@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "traefik_ingress" {
       kind    = "traefik"
     }
 
-    name = local.espresso_namespaces.traefik_namespace
+    name = local.homelab_namespaces.traefik_namespace
   }
 
   lifecycle {
@@ -19,13 +19,13 @@ resource "kubernetes_namespace" "traefik_ingress" {
 }
 
 ### Provision a traefik-based ingress
-module "espresso_ingress" {
+module "homelab_ingress" {
   source = "../../modules/kubernetes_ingress_traefik"
 
-  ingress_name      = "espresso-ingress"
+  ingress_name      = "homelab-ingress"
   ingress_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
-  traefik_service_account_name = "espresso-ingress-traefik"
+  traefik_service_account_name = "homelab-ingress-traefik"
 
   service_type        = "NodePort"
 
@@ -49,7 +49,7 @@ data "kubectl_path_documents" "traefik_config" {
   pattern = "${path.module}/specs/traefik_*.yaml"
 
   vars = {
-    TRAEFIK_INSTANCE = "espresso-ingress"
+    TRAEFIK_INSTANCE = "homelab-ingress"
     TRAEFIK_NAMESPACE = kubernetes_namespace.traefik_ingress.metadata[0].name
   }
 }
@@ -62,6 +62,6 @@ resource "kubectl_manifest" "traefik_config" {
   override_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
   depends_on = [
-    module.espresso_ingress
+    module.homelab_ingress
   ]
 }

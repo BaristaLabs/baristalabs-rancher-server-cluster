@@ -18,8 +18,8 @@ data "kubectl_path_documents" "prometheus_stack_ingress" {
   pattern = "${path.module}/specs/prometheus_stack_ingress_routes.yaml"
 
   vars = {
-    grafana_hostname = local.espresso_hostnames.grafana
-    alertmanager_hostname = local.espresso_hostnames.alertmanager
+    grafana_hostname = local.homelab_hostnames.grafana
+    alertmanager_hostname = local.homelab_hostnames.alertmanager
   }
 }
 
@@ -31,7 +31,7 @@ resource "kubectl_manifest" "prometheus_stack_ingress" {
   override_namespace = kubernetes_namespace.monitoring.metadata[0].name
 
   depends_on = [
-    module.espresso_ingress,
+    module.homelab_ingress,
     helm_release.prometheus_stack
   ]
 }

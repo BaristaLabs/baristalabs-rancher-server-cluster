@@ -1,10 +1,10 @@
-# Set up the locals to use for the Espresso-01 environment
+# Set up the locals to use for the Homelab-01 environment
 locals {
   hostname = "baristalabs.io"
-  creator_name = "espresso_terraform"
+  creator_name = "homelab_terraform"
 
   # Namespaces
-  espresso_namespaces = {
+  homelab_namespaces = {
     "cert_manager_namespace" = "cert-manager"
     "traefik_namespace"      = "traefik-system"
     "dapr_namespace"         = "dapr-system"
@@ -17,12 +17,12 @@ locals {
   }
 
   # Hostnames
-  espresso_hostnames = {
+  homelab_hostnames = {
     grafana = "grafana.${local.hostname}"
     alertmanager = "alertmanager.${local.hostname}"
     
     whoami          = "whoami.${local.hostname}"
-    whoami_internal = "whoami.espresso.local"
+    whoami_internal = "whoami.homelab.local"
   }
 
   web_node_port       = 30070
@@ -30,7 +30,7 @@ locals {
 
   cert_admin_email = "sean@baristalabs.io"
 
-  tags = merge(var.tags, { Creator = "terraform-baristalabs", Environment = "espresso-01" })
+  tags = merge(var.tags, { Creator = "terraform-baristalabs", Environment = "homelab-01" })
 }
 
 # Create the namespace for monitoring resources
@@ -41,7 +41,7 @@ resource "kubernetes_namespace" "monitoring" {
       creator = local.creator_name
     }
 
-    name = local.espresso_namespaces.monitoring_namespace
+    name = local.homelab_namespaces.monitoring_namespace
   }
 
   lifecycle {

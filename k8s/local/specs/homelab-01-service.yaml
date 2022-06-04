@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: external-espresso-01-service
+  name: external-homelab-01-service
 spec:
   ports:
   - name: http
@@ -17,16 +17,16 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: external-espresso-01-service
+  name: external-homelab-01-service
 subsets: 
   -
     addresses:
       -
-        ip: "100.80.73.93"
+        ip: "100.117.25.117"
       -
-        ip: "100.98.77.13"
+        ip: "100.96.223.125"
       -
-        ip: "100.66.78.81"
+        ip: "100.84.69.113"
     ports:
       -
         port: 30070
@@ -39,7 +39,7 @@ subsets:
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: espresso-01-retry
+  name: homelab-01-retry
 spec:
   retry:
     attempts: 4

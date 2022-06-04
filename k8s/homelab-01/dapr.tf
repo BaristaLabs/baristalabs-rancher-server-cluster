@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "dapr_namespace" {
       creator = local.creator_name
     }
 
-    name = local.espresso_namespaces.dapr_namespace
+    name = local.homelab_namespaces.dapr_namespace
   }
 
   lifecycle {

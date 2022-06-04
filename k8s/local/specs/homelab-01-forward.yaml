@@ -1,11 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: espresso-01-${name}
+  name: homelab-01-${name}
 spec:
   dnsNames:
     - ${url}
-  secretName: tls-espresso-01-${name}
+  secretName: tls-homelab-01-${name}
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
@@ -23,7 +23,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: espresso-01-${name}-route-redirect
+  name: homelab-01-${name}-route-redirect
 spec:
   entryPoints:
     - web
@@ -39,18 +39,18 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: espresso-01-${name}-route
+  name: homelab-01-${name}-route
 spec:
   entryPoints:
     - websecure
   tls:
-    secretName: tls-espresso-01-${name}
+    secretName: tls-homelab-01-${name}
   routes:
     - match: Host(`${url}`)
       kind: Rule
       services:
-      - name: external-espresso-01-service
+      - name: external-homelab-01-service
         passHostHeader: true
         port: 80
       middlewares:
-        - name: espresso-01-retry
+        - name: homelab-01-retry

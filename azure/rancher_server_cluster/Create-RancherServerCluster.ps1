@@ -1,8 +1,6 @@
 #!/usr/bin/env pwsh
 [CmdletBinding()]
 param(
-    [Parameter()]
-    [bool] $CertCAUseProduction = $false
 )
 
 $ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='SilentlyContinue';

@@ -10,4 +10,8 @@ resource "helm_release" "loki" {
   values = [ 
     file("${path.module}/values/loki_stack_values.yaml")
   ]
+
+  depends_on = [
+    helm_release.prometheus_stack
+  ]
 }

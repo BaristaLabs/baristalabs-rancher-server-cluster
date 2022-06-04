@@ -66,6 +66,8 @@ resource "azurerm_kubernetes_cluster" "rancher_server" {
     type                  = "VirtualMachineScaleSets"
     enable_node_public_ip = false
 
+    max_pods = 100
+
     enable_auto_scaling = true
     min_count           = 1
     max_count           = var.rancher_server_cluster_agent_node_count
