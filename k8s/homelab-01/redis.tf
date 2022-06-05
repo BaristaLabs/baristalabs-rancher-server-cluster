@@ -21,7 +21,7 @@ resource "helm_release" "bitnami_redis" {
   name       = "redis"
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "redis"
-  version    = "16.9.5"
+  version    = "16.11.2"
 
   namespace = kubernetes_namespace.redis.metadata[0].name
   
