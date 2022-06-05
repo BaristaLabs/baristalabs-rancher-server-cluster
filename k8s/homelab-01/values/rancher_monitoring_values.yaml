@@ -31,6 +31,7 @@ grafana:
    - grafana-piechart-panel
    - briangann-gauge-panel
    - jdbranham-diagram-panel
+   - redis-datasource
   additionalDataSources: 
     - name: loki
       access: proxy
@@ -38,6 +39,19 @@ grafana:
       type: loki
       url: http://loki:3100
       version: 1
+      editable: true
+    - name: redis
+      access: proxy
+      orgId: 1
+      type: redis-datasource
+      url: redis://redis-master.redis:6379
+      jsonData:
+        poolSize: 5
+        timeout: 10
+        pingInterval: 0
+        pipelineWindow: 0
+      version: 1
+      editable: true
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -52,6 +66,10 @@ grafana:
             path: /var/lib/grafana/dashboards/default
   dashboards:
     default:
+      redis:
+        gnetId: 12776
+        revision: 2
+        datasource: redis
       traefik2:
         gnetId: 12250
         revision: 1

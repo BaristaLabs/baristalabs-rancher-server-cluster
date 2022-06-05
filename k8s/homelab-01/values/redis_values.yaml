@@ -11,6 +11,11 @@ master:
     storageClass: longhorn
     size: 5Gi
 
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+
 replica:
   nodeSelector:
     kubernetes.io/os: linux

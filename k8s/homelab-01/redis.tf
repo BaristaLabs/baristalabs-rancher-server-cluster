@@ -30,6 +30,7 @@ resource "helm_release" "bitnami_redis" {
   ]
 
   depends_on = [
-    kubernetes_namespace.redis
+    kubernetes_namespace.redis,
+    rancher2_app_v2.rancher_monitoring
   ]
 }

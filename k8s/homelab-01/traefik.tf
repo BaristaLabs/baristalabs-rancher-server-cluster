@@ -52,9 +52,16 @@ data "kubectl_path_documents" "traefik_config" {
 }
 
 resource "kubectl_manifest" "traefik_config" {
-  for_each = toset(data.kubectl_path_documents.traefik_config.documents)
+  count = length(
+    flatten(
+      toset([
+        for f in fileset(".", data.kubectl_path_documents.traefik_config.pattern) : split("\n---\n", file(f))
+        ]
+      )
+    )
+  )
 
-  yaml_body = each.value
+  yaml_body = element(data.kubectl_path_documents.traefik_config.documents, count.index)
 
   override_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
