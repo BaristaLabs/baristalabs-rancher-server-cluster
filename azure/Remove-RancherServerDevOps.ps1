@@ -39,4 +39,4 @@ Remove-Item .terraform -recurse -force -ErrorAction Ignore
 Remove-Item backend.tf -force -ErrorAction Ignore
 Remove-Item terragrunt.hcl -force -ErrorAction Ignore
 
-Write-Host 'Rancher Server has been removed.'
+Write-Host 'Rancher Server DevOps has been removed.'

@@ -1,1 +1,1 @@
-Contains Terraform configuration for Kubernetes.
+Contains Terraform configuration for Kubernetes-based resources.

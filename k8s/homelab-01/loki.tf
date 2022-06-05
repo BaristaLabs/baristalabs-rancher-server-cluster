@@ -5,13 +5,13 @@ resource "helm_release" "loki" {
   chart      = "loki-stack"
   version    = "2.6.4"
 
-  namespace = kubernetes_namespace.monitoring.metadata[0].name
+  namespace = "cattle-monitoring-system"
 
   values = [ 
     file("${path.module}/values/loki_stack_values.yaml")
   ]
 
   depends_on = [
-    helm_release.prometheus_stack
+    rancher2_app_v2.rancher_monitoring
   ]
 }

@@ -9,7 +9,7 @@ spec:
     - match: Host(`${grafana_hostname}`)
       kind: Rule
       services:
-      - name: prometheus-stack-grafana
+      - name: rancher-monitoring-grafana
         passHostHeader: true
         port: 80
 ---
@@ -24,6 +24,6 @@ spec:
     - match: Host(`${alertmanager_hostname}`)
       kind: Rule
       services:
-      - name: prometheus-stack-kube-prom-alertmanager
+      - name: rancher-monitoring-alertmanager
         passHostHeader: true
         port: 9093

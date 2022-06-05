@@ -1,21 +1,18 @@
 # Provision Prometheus
 
-resource "helm_release" "prometheus_stack" {
-  name       = "prometheus-stack"
-  repository = "https://prometheus-community.github.io/helm-charts"
-  chart      = "kube-prometheus-stack"
-  version    = "35.2.0"
-
-  namespace = kubernetes_namespace.monitoring.metadata[0].name
-
-  values = [ 
-    file("${path.module}/values/prometheus_stack_values.yaml")
-  ]
+resource "rancher2_app_v2" "rancher_monitoring" {
+  cluster_id = var.cluster_id
+  name          = "rancher-monitoring"
+  namespace     = "cattle-monitoring-system"
+  repo_name     = "rancher-charts"
+  chart_name    = "rancher-monitoring"
+  chart_version = "100.1.2+up19.0.3"
+  values = file("${path.module}/values/rancher_monitoring_values.yaml")
 }
 
 # Provision the ingress routes
-data "kubectl_path_documents" "prometheus_stack_ingress" {
-  pattern = "${path.module}/specs/prometheus_stack_ingress_routes.yaml"
+data "kubectl_path_documents" "rancher_monitoring_ingress" {
+  pattern = "${path.module}/specs/rancher_monitoring_ingress_routes.yaml"
 
   vars = {
     grafana_hostname = local.homelab_hostnames.grafana
@@ -23,15 +20,15 @@ data "kubectl_path_documents" "prometheus_stack_ingress" {
   }
 }
 
-resource "kubectl_manifest" "prometheus_stack_ingress" {
-  for_each = toset(data.kubectl_path_documents.prometheus_stack_ingress.documents)
+resource "kubectl_manifest" "rancher_monitoring_ingress" {
+  for_each = toset(data.kubectl_path_documents.rancher_monitoring_ingress.documents)
 
   yaml_body = each.value
 
-  override_namespace = kubernetes_namespace.monitoring.metadata[0].name
+  override_namespace = "cattle-monitoring-system"
 
   depends_on = [
     module.homelab_ingress,
-    helm_release.prometheus_stack
+    rancher2_app_v2.rancher_monitoring
   ]
 }

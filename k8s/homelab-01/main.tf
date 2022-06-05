@@ -9,8 +9,6 @@ locals {
     "traefik_namespace"      = "traefik-system"
     "dapr_namespace"         = "dapr-system"
 
-    "monitoring_namespace"   = "monitoring"
-
     "redis_namespace"        = "redis"
 
     "whoami_namespace"       = "whoami"
@@ -31,23 +29,4 @@ locals {
   cert_admin_email = "sean@baristalabs.io"
 
   tags = merge(var.tags, { Creator = "terraform-baristalabs", Environment = "homelab-01" })
-}
-
-# Create the namespace for monitoring resources
-resource "kubernetes_namespace" "monitoring" {
-  metadata {
-
-    labels = {
-      creator = local.creator_name
-    }
-
-    name = local.homelab_namespaces.monitoring_namespace
-  }
-
-  lifecycle {
-    ignore_changes = [
-      metadata[0].annotations,
-      metadata[0].labels,
-    ]
-  }
 }
