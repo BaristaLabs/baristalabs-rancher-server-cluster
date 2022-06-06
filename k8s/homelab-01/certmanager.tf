@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "cert_manager" {
       kind    = "cert_manager"
     }
 
-    name = local.rancher_server_namespaces.cert_manager_namespace
+    name = local.homelab_namespaces.cert_manager_namespace
   }
 
   lifecycle {
@@ -21,22 +21,13 @@ resource "kubernetes_namespace" "cert_manager" {
 module "cert_manager" {
   source = "../../modules/kubernetes_cert_manager"
 
-  cert_manager_namespace = local.rancher_server_namespaces.cert_manager_namespace
+  cert_manager_namespace = local.homelab_namespaces.cert_manager_namespace
   cert_manager_replicas  = 3
 }
 
 ### Provision the base cert manager configuration
 data "kubectl_path_documents" "cert_manager_config" {
   pattern = "${path.module}/specs/cert_manager_*.yaml"
-
-  vars  = {
-    CERT_ADMIN_EMAIL = local.cert_admin_email
-
-    AZURE_SUBSCRIPTION_ID = data.azurerm_client_config.current.subscription_id
-    DOMAIN_AZURE_DNS_ZONE_RESOURCE_GROUP = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.resource_group_name
-    DOMAIN_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.name
-    MANAGED_IDENTITY_CLIENT_ID = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_kubelet_client_id
-  }
 }
 
 resource "kubectl_manifest" "cert_manager_config" {
@@ -46,8 +37,7 @@ resource "kubectl_manifest" "cert_manager_config" {
   override_namespace = kubernetes_namespace.cert_manager.metadata[0].name
 
   depends_on = [
-    module.rancher_server_ingress,
-    module.rancher_server,
+    module.homelab_ingress,
     module.cert_manager
   ]
 }

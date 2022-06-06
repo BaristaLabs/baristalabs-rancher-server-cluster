@@ -1,0 +1,3 @@
+# https://github.com/jaegertracing/helm-charts/blob/main/charts/jaeger-operator/values.yaml
+nodeSelector:
+  kubernetes.io/os: linux

@@ -1,1 +1,16 @@
 # https://github.com/grafana/helm-charts/blob/main/charts/loki-stack/values.yaml
+
+loki:
+  nodeSelector:
+    kubernetes.io/os: linux
+  persistence:
+    enabled: true
+    storageClass: longhorn
+  serviceMonitor:
+    enabled: true
+
+promtail:
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceMonitor:
+    enabled: true

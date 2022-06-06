@@ -1,0 +1,35 @@
+# https://github.com/jaegertracing/helm-charts/blob/main/charts/jaeger/values.yaml
+
+provisionDataStore:
+  cassandra: false
+
+storage:
+  type: elasticsearch
+  elasticsearch:
+    host: rancher-monitoring-elasticsearch
+    usePassword: false
+
+agent:
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceMonitor:
+    enabled: true
+
+collector:
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceMonitor:
+    enabled: true
+
+query:
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceMonitor:
+    enabled: true
+
+esIndexCleaner:
+  enabled: true
+  numberOfDays: 7
+  schedule: "55 23 * * *"
+
+

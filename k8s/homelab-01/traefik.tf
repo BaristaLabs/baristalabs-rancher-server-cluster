@@ -66,6 +66,7 @@ resource "kubectl_manifest" "traefik_config" {
   override_namespace = kubernetes_namespace.traefik_ingress.metadata[0].name
 
   depends_on = [
-    module.homelab_ingress
+    module.homelab_ingress,
+    rancher2_app_v2.rancher_monitoring
   ]
 }

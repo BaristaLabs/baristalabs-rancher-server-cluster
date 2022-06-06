@@ -1,0 +1,30 @@
+# https://github.com/bitnami/charts/blob/master/bitnami/elasticsearch/values.yaml
+
+master:
+  nodeSelector:
+    kubernetes.io/os: linux
+  persistence:
+    storageClass: longhorn
+    size: 10Gi
+
+data:
+  nodeSelector:
+    kubernetes.io/os: linux
+  persistence:
+    storageClass: longhorn
+    size: 10Gi
+
+coordinating:
+  nodeSelector:
+    kubernetes.io/os: linux
+  
+ingest:
+  nodeSelector:
+    kubernetes.io/os: linux
+
+metrics:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/os: linux
+  serviceMonitor:
+    enabled: true

@@ -52,6 +52,20 @@ grafana:
         pipelineWindow: 0
       version: 1
       editable: true
+    - name: elasticsearch-monitoring
+      access: proxy
+      orgId: 1
+      type: elasticsearch
+      url: http://rancher-monitoring-elasticsearch:9200
+      version: 1
+      editable: true
+    - name: jaeger
+      access: proxy
+      orgId: 1
+      type: jaeger
+      url: http://jaeger:16686
+      version: 1
+      editable: true
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -66,6 +80,10 @@ grafana:
             path: /var/lib/grafana/dashboards/default
   dashboards:
     default:
+      elasticsearch-monitoring:
+        gnetId: 6483
+        revision: 2
+        datasource: Prometheus
       redis:
         gnetId: 12776
         revision: 2
