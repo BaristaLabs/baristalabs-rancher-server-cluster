@@ -167,33 +167,10 @@ build {
     inline = [
       "wmic useraccount where \"name='Administrator'\" set PasswordExpires=FALSE",
       "cscript C:\\Windows\\System32\\slmgr.vbs /ipk ${var.windows_product_key}",
-      # "cscript C:\\Windows\\System32\\slmgr.vbs /ato",
-    ]
-  }
-
-  provisioner "windows-restart" {}
-
-  provisioner "powershell" {
-    elevated_user     = "Administrator"
-    elevated_password = var.admin_password
-
-    inline = [
-      "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force",
-      "Install-Module -Name DockerMsftProvider -Repository PSGallery -Force",
-      "Install-Package -Name docker -ProviderName DockerMsftProvider -Force",
-    ]
-  }
-
-  provisioner "windows-restart" {}
-
-  provisioner "powershell" {
-    elevated_user     = "Administrator"
-    elevated_password = var.admin_password
-
-    inline = [
-      "Install-Package -Name Docker -ProviderName DockerMsftProvider -Update -Force",
-      "Start-Service Docker",
+      # "cscript C:\\Windows\\System32\\slmgr.vbs /ato", # Uncomment to activate
+      "Enable-WindowsOptionalFeature -Online -FeatureName containers –All",
       "e:\\Install-Chocolatey.ps1",
+      "Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force",
       "Copy-Item -Path 'E:\\Disable-WinRM' -Destination 'C:\\' -Force",
     ]
   }
@@ -210,8 +187,7 @@ build {
     pause_before = "5s"
     inline = [
       "Rename-Computer -NewName ${var.machine_name} -Force",
-      "docker image pull ${var.rancher_agent_image_name}",
-      # "PowerShell -NoLogo -NonInteractive -Command \"& {docker run -v c:\\:c:\\host  ${var.rancher_agent_image_name} bootstrap --server ${var.rancher_server_url} --token ${var.rancher_server_token} --ca-checksum ${var.rancher_server_ca_checksum}  ${var.rancher_node_docker_args} | iex}\""
+      "Enable-WindowsOptionalFeature -Online -FeatureName containers –All",
     ]
   }
 }
