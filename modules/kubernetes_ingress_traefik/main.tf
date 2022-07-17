@@ -67,7 +67,7 @@ resource "helm_release" "traefik_ingress" {
   name       = var.ingress_name
   repository = "https://helm.traefik.io/traefik"
   chart      = "traefik"
-  version    = "10.20.1"
+  version    = "10.24.0"
 
   namespace = var.ingress_namespace
 

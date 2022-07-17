@@ -2,7 +2,7 @@ resource "helm_release" "rancher" {
   name       = "rancher"
   repository = "https://releases.rancher.com/server-charts/stable"
   chart      = "rancher"
-  version    = "2.6.5"
+  version    = var.rancher_version
 
   namespace = var.rancher_namespace
 
