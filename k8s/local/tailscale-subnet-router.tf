@@ -22,6 +22,7 @@ resource "helm_release" "tailscale_subnet_router" {
   name       = "tailscale-subnet-router"
   repository = "https://charts.visonneau.fr"
   chart      = "tailscale-relay"
+  version    = "0.1.7"
 
   namespace = kubernetes_namespace.tailscale.metadata[0].name
 

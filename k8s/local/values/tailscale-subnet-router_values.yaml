@@ -1,6 +1,6 @@
 image:
   pullPolicy: Always
-  #tag: "v1.24.1"
+  tag: "v1.28.0"
 
 config:
   variables:
