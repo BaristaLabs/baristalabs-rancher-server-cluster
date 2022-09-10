@@ -36,6 +36,8 @@ resource "azurerm_kubernetes_cluster" "rancher_server" {
   kubernetes_version = var.rancher_server_cluster_version
   sku_tier           = var.rancher_server_cluster_sku_tier
 
+  automatic_channel_upgrade = "stable"
+  
   identity {
     type = "SystemAssigned"
   }

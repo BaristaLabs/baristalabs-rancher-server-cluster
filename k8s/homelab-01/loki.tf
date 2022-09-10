@@ -3,7 +3,7 @@ resource "helm_release" "loki" {
   name       = "loki"
   repository = "https://grafana.github.io/helm-charts"
   chart      = "loki-stack"
-  version    = "2.6.4"
+  version    = "2.8.2"
 
   namespace = "cattle-monitoring-system"
 

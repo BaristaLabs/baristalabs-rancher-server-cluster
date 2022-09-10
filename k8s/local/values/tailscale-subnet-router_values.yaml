@@ -1,6 +1,7 @@
 image:
   pullPolicy: Always
-  tag: "v1.28.0"
+  repository: baristalabs/tailscale-relay
+  tag: "latest"
 
 config:
   variables:

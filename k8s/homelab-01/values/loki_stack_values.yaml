@@ -1,6 +1,7 @@
 # https://github.com/grafana/helm-charts/blob/main/charts/loki-stack/values.yaml
 
 loki:
+  isDefault: false
   nodeSelector:
     kubernetes.io/os: linux
   persistence:

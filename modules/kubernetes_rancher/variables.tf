@@ -6,7 +6,7 @@ variable "rancher_namespace" {
 variable "rancher_version" {
   type        = string
   description = "the rancher version to use"
-  default     = "2.6.6"
+  default     = "2.6.8"
 }
 
 variable "rancher_hostname" {
