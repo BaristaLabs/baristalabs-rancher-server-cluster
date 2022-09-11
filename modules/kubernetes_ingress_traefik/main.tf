@@ -10,7 +10,14 @@ resource "kubernetes_role" "tailscale" {
   rule {
     api_groups = [""]
     resources  = ["secrets"]
-    verbs      = ["create", "get", "update"]
+    verbs      = ["create"]
+  }
+
+  rule {
+    api_groups = [""]
+    resource_names = ["tailscale"]
+    resources  = ["secrets"]
+    verbs      = ["get", "update"]
   }
 }
 

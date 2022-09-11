@@ -27,7 +27,8 @@ module "rancher_server_ingress" {
   tailscale_ephemeral_auth_key = var.tailscale_ephemeral_auth_key
 
   traefik_additional_arguments = [
-    "--ping"
+    "--ping",
+    "--serverstransport.insecureskipverify=true"
   ]
 
   depends_on = [

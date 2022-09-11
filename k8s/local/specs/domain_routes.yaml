@@ -8,7 +8,7 @@ spec:
     - ${hostname}
   secretName: tls-${hostname}-wildcard
   issuerRef:
-    name: letsencrypt-domain-wildcard-production
+    name: ${issuer}
     kind: ClusterIssuer
   commonName: '*.${hostname}'
   acme:
@@ -38,7 +38,7 @@ metadata:
 spec:
   redirectRegex:
     regex: ^https://(.*?)\.?${hostname}
-    replacement: https://www.${hostname}
+    replacement: ${redirect_url}
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

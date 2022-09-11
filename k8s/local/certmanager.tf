@@ -35,6 +35,7 @@ data "kubectl_path_documents" "cert_manager_config" {
     AZURE_SUBSCRIPTION_ID = data.azurerm_client_config.current.subscription_id
     DOMAIN_AZURE_DNS_ZONE_RESOURCE_GROUP = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.resource_group_name
     DOMAIN_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.domain_dns_zone.name
+    TREASURYECM_DOMAIN_AZURE_DNS_ZONE = data.terraform_remote_state.rancher_server_cluster.outputs.treasuryecm_domain_dns_zone.name
     MANAGED_IDENTITY_CLIENT_ID = data.terraform_remote_state.rancher_server_cluster.outputs.rancher_server_cluster_kubelet_client_id
   }
 }

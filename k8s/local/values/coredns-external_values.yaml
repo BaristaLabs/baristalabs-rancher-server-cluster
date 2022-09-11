@@ -59,9 +59,9 @@ zoneFiles:
      homelab.local.   IN SOA sns.dns.icann.com. noc.dns.icann.com. 2015082541 7200 3600 1209600 3600
      homelab.local.   IN NS  b.iana-servers.net.
      homelab.local.   IN NS  a.iana-servers.net.
-     homelab.local.   IN A   100.84.46.166
-     homelab.local.   IN A   100.116.95.247
-     homelab.local.   IN A   100.103.237.171
-     *.homelab.local. IN A   100.84.46.166
-     *.homelab.local. IN A   100.116.95.247
-     *.homelab.local. IN A   100.103.237.171
+     homelab.local.   IN A   100.66.87.151
+     homelab.local.   IN A   100.109.218.203
+     homelab.local.   IN A   100.109.94.218
+     *.homelab.local. IN A   100.66.87.151
+     *.homelab.local. IN A   100.109.218.203
+     *.homelab.local. IN A   100.109.94.218

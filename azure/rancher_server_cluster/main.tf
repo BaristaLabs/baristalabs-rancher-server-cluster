@@ -18,6 +18,10 @@ locals {
   domain_hostname         = "baristalabs.io"
   rancher_server_hostname = "rancher"
 
+  treasuryecm = {
+    domain_hostname = "treasuryecm.rdaprojects.com"
+  }
+
   tags = merge(var.tags, { Creator = "terraform-baristalabs-rancher-server", Environment = "rancher-server-01" })
 }
 

@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-domain-wildcard-production
+  name: letsencrypt-domain-wildcard-production-treasuryecm
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
@@ -16,7 +16,7 @@ spec:
           azureDNS:
             subscriptionID: "${AZURE_SUBSCRIPTION_ID}"
             resourceGroupName: "${DOMAIN_AZURE_DNS_ZONE_RESOURCE_GROUP}"
-            hostedZoneName: "${DOMAIN_AZURE_DNS_ZONE}"
+            hostedZoneName: "${TREASURYECM_DOMAIN_AZURE_DNS_ZONE}"
             environment: "AzurePublicCloud"
             managedIdentity:
               clientID: "${MANAGED_IDENTITY_CLIENT_ID}"

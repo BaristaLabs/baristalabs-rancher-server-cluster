@@ -54,3 +54,7 @@ output "rancher_server_cluster_identity" {
 output "domain_dns_zone" {
   value = azurerm_dns_zone.domain
 }
+
+output "treasuryecm_domain_dns_zone" {
+  value = azurerm_dns_zone.treasuryecm_domain
+}

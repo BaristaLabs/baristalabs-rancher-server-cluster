@@ -45,7 +45,8 @@ locals {
   homelab_01_hostnames = {
     grafana      = "grafana.baristalabs.io"
 
-    whoami = "whoami.baristalabs.io"
+    whoami       = "whoami.baristalabs.io"
+    whoami2      = "whoami.treasuryecm.rdaprojects.com"
   }
 
   cert_admin_email       = "sean@baristalabs.io"
